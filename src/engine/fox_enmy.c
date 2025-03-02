@@ -1791,13 +1791,12 @@ void Actor_Despawn(Actor* this) {
 Actor* Actor_Spawn(s32 actorId, f32 posX, f32 posY, f32 posZ, f32 rotX, f32 rotY, f32 rotZ) {
     s32 i;
     Actor* actor;
-    s32 offset = actorId == OBJ_ACTOR_DUMMY ? 60 : 0;
 
-    for (actor = &gActors[offset], i = offset; i < ARRAY_COUNT(gActors); i++, actor++) {
+    for (actor = &gActors[0], i = 0; i < ARRAY_COUNT(gActors); i++, actor++) {
         if (actor->obj.status == OBJ_FREE) {
             CALL_CANCELLABLE_EVENT(ObjectInitEvent, OBJECT_TYPE_ACTOR, actor) {
                 Actor_Initialize(actor);
-                actor->obj.status = OBJ_INIT;
+                actor->obj.status = OBJ_ACTIVE;
                 actor->obj.id = actorId;
                 actor->obj.pos.x = posX;
                 actor->obj.pos.y = posY;
@@ -1806,8 +1805,8 @@ Actor* Actor_Spawn(s32 actorId, f32 posX, f32 posY, f32 posZ, f32 rotX, f32 rotY
                 actor->obj.rot.y = rotY;
                 actor->obj.rot.z = rotZ;
                 Object_SetInfo(&actor->info, actor->obj.id);
+                break;
             }
-            break;
         }
     }
 

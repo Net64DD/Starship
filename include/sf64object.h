@@ -716,14 +716,14 @@ typedef enum ObjectId {
     /* 397 */ OBJ_EFFECT_397,
     /* 398 */ OBJ_EFFECT_398,
     /* 399 */ OBJ_EFFECT_399,
-    /* 400 */ OBJ_ENV_SMALL_ROCKS_ENABLE,
+    /* 400 */ OBJ_ACTOR_DUMMY = 400,
+    /* 400 */ OBJ_ENV_SMALL_ROCKS_ENABLE = 400,
     /* 401 */ OBJ_ENV_SMALL_ROCKS_DISABLE,
     /* 402 */ OBJ_UNK_402,
     /* 403 */ OBJ_UNK_403,
     /* 404 */ OBJ_UNK_404,
     /* 405 */ OBJ_UNK_405,
-    /* 406 */ OBJ_ACTOR_DUMMY,
-    /* 407 */ OBJ_ID_MAX,
+    /* 406 */ OBJ_ID_MAX,
 } ObjectId;
 
 #define OBJ_SCENERY_START OBJ_SCENERY_CO_STONE_ARCH

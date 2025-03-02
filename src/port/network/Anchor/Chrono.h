@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef __cplusplus
+
 #include "global.h"
 #include "sf64context.h"
 #include "sf64math.h"
@@ -8,8 +10,10 @@
 #include <libultraship/libultraship.h>
 
 class Chrono {
-public:
-  static std::string version;
-  static nlohmann::json PrepClientState();
-  static nlohmann::json PrepRoomState();
+  public:
+    static std::string version;
+    static nlohmann::json PrepClientState();
+    static nlohmann::json PrepRoomState();
 };
+
+#endif

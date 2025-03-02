@@ -587,6 +587,8 @@ void Cutscene_EnterWarpZone(Player* player) {
 }
 
 void Cutscene_LevelStart(Player* player) {
+    CALL_CANCELLABLE_RETURN_EVENT(PreLevelStartEvent, gCurrentLevel);
+
     gCsFrameCount++;
     if (gLevelMode == LEVELMODE_ON_RAILS) {
         switch (gCurrentLevel) {
@@ -667,6 +669,8 @@ void Cutscene_LevelStart(Player* player) {
                 break;
         }
     }
+
+    CALL_EVENT(PostLevelStartEvent, gCurrentLevel);
 }
 
 f32 D_demo_800CA050[] = { 210.0f, -210.0f, 0.0f };

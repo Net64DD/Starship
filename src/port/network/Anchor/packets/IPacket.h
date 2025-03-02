@@ -44,7 +44,7 @@ protected:
 
 template<typename T>
 std::optional<T> GetNode(nlohmann::json& node, const std::string& key) {
-    if(!node[key]) {
+    if(!node.contains(key)) {
         return std::nullopt;
     }
 
@@ -53,7 +53,7 @@ std::optional<T> GetNode(nlohmann::json& node, const std::string& key) {
 
 template<typename T>
 T GetNode(nlohmann::json& node, const std::string& key, const T& def) {
-    if(!node[key]) {
+    if(!node.contains(key)) {
         return def;
     }
 
@@ -62,7 +62,7 @@ T GetNode(nlohmann::json& node, const std::string& key, const T& def) {
 
 template<typename T>
 T GetSafeNode(nlohmann::json& node, const std::string& key) {
-    if(!node[key]) {
+    if(!node.contains(key)) {
         throw std::runtime_error("Payload missing the '" + key + "' key\nProblematic JSON:\n" + node.dump(4));
     }
 

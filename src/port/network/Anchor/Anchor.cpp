@@ -91,6 +91,15 @@ void Anchor::OnIncomingJson(nlohmann::json payload) {
 
 EventID UpdatePlayerID;
 EventID ObjectInitID;
+EventID PlayInitID;
+
+void OnPlayInit(IEvent* ev){
+    SEND_PACKET(UpdateClientState);
+
+    if (Anchor::Instance->IsSaveLoaded()) {
+        Anchor::Instance->RefreshClientActors();
+    }
+}
 
 void Anchor::RegisterHooks() {
     UpdatePlayerID = REGISTER_LISTENER(PlayerPostUpdateEvent, EVENT_PRIORITY_NORMAL, [](IEvent* ev){
@@ -101,11 +110,14 @@ void Anchor::RegisterHooks() {
     ObjectInitID = REGISTER_LISTENER(ObjectInitEvent, EVENT_PRIORITY_NORMAL, [](IEvent* ev){
         SEND_PACKET(UpdateClientState);
     });
+
+    PlayInitID = REGISTER_LISTENER(PostPlayInitEvent, EVENT_PRIORITY_NORMAL, OnPlayInit);
 }
 
 void Anchor::UnregisterHooks() {
     UNREGISTER_LISTENER(PlayerPostUpdateEvent, UpdatePlayerID);
     UNREGISTER_LISTENER(ObjectInitEvent, ObjectInitID);
+    UNREGISTER_LISTENER(PostPlayInitEvent, PlayInitID);
 }
 
 // MARK: - Misc/Helpers
@@ -116,9 +128,9 @@ void Anchor::RefreshClientActors() {
         return;
     }
 
-    for(int i = 60; i < ARRAY_COUNT(gActors); i++){
+    for(int i = 0; i < ARRAY_COUNT(gActors); i++){
         Actor* actor = &gActors[i];
-        if(actor->obj.status == OBJ_INIT){
+        if(actor->obj.status == OBJ_ACTIVE && actor->obj.id == OBJ_ACTOR_DUMMY){
             Actor_Despawn(actor);
         }
     }
@@ -137,14 +149,16 @@ void Anchor::RefreshClientActors() {
         auto dummy = Actor_Spawn(OBJ_ACTOR_DUMMY, client.pos.x,
                                  client.pos.y, client.pos.z, client.rot.x, client.rot.y,
                                  client.rot.z);
-        dummy->index = actorIndexToClientId.size() - 1;
+        dummy->iwork[11] = 1;
+        dummy->iwork[TEAM_FACE] = FACE_FOX;
+        dummy->iwork[24] = actorIndexToClientId[actorIndexToClientId.size() - 1];
         client.player = dummy;
     }
     refreshingActors = false;
 }
 
 bool Anchor::IsSaveLoaded() {
-    if (gGameState != GSTATE_PLAY) {
+    if ((gGameState != GSTATE_PLAY) || (gPlayState < PLAY_INIT)) {
         return false;
     }
 
