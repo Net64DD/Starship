@@ -1,6 +1,7 @@
 #pragma once
 
 #include "global.h"
+#include "sf64context.h"
 #include "sf64math.h"
 #include <string>
 #include <nlohmann/json.hpp>

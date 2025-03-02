@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-typedef uint32_t EventID;
+typedef int32_t EventID;
 typedef uint32_t ListenerID;
 
 typedef enum {
@@ -24,14 +24,6 @@ typedef struct {
     EventCallback function;
 } EventListener;
 
-#ifdef INIT_EVENT_IDS
-#define DECLARE_EVENT(eventName) \
-    uint32_t eventName##ID = -1;
-#else
-#define DECLARE_EVENT(eventName) \
-    extern uint32_t eventName##ID;
-#endif
-
 #define DEFINE_EVENT(eventName, ...) \
     typedef struct { \
         IEvent event; \
@@ -44,6 +36,14 @@ typedef struct {
 #include <array>
 #include <vector>
 #include <unordered_map>
+
+#ifdef INIT_EVENT_IDS
+#define DECLARE_EVENT(eventName) \
+    extern "C" EventID eventName##ID = -1;
+#else
+#define DECLARE_EVENT(eventName) \
+    extern "C" EventID eventName##ID;
+#endif
 
 #define REGISTER_LISTENER(eventType, priority, callback) \
     EventSystem::Instance->RegisterListener(eventType##ID, callback, priority)
@@ -63,6 +63,14 @@ private:
     EventID mInternalEventID = 0;
 };
 #else
+
+#ifdef INIT_EVENT_IDS
+#define DECLARE_EVENT(eventName) \
+    EventID eventName##ID = -1;
+#else
+#define DECLARE_EVENT(eventName) \
+    extern EventID eventName##ID;
+#endif
 
 #define CALL_EVENT(eventType, ...) \
     eventType eventType##_ = { {false}, __VA_ARGS__ }; \
