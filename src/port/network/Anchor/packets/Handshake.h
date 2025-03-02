@@ -4,25 +4,24 @@
 
 class Handshake : public IPacket {
 public:
-  explicit Handshake() : IPacket(Anchor::HANDSHAKE) {}
+    explicit Handshake() : IPacket(Anchor::HANDSHAKE) {}
 
-  void onSend(nlohmann::json& payload) override {
-      payload["roomId"] = CVarGetString(CVAR_REMOTE_ANCHOR("RoomId"), "");
-      payload["roomState"] = Chrono::PrepRoomState();
-      payload["clientState"] = Chrono::PrepClientState();
+    bool onSend(nlohmann::json& payload) override {
+        payload["roomId"] = CVarGetString(CVAR_REMOTE_ANCHOR("RoomId"), "");
+        payload["roomState"] = Chrono::PrepRoomState();
+        payload["clientState"] = Chrono::PrepClientState();
 
-      return payload;
-  }
+        return true;
+    }
 };
 
 class UpdateRoomState : public IPacket {
-  public:
+public:
     explicit UpdateRoomState() : IPacket(Anchor::UPDATE_ROOM_STATE) {}
 
-    void onSend(nlohmann::json& payload) override {
+    bool onSend(nlohmann::json& payload) override {
         payload["roomState"] = Chrono::PrepRoomState();
-
-        return payload;
+        return true;
     }
 
     void onReceive(nlohmann::json& payload) override {
@@ -40,12 +39,12 @@ class UpdateRoomState : public IPacket {
 };
 
 class UpdateClientState : public IPacket {
-  public:
+public:
     explicit UpdateClientState() : IPacket(Anchor::UPDATE_CLIENT_STATE) {}
 
-    void onSend(nlohmann::json& payload) override {
+    bool onSend(nlohmann::json& payload) override {
         payload["state"] = Chrono::PrepClientState();
-        return payload;
+        return true;
     }
 
     void onReceive(nlohmann::json& payload) override {

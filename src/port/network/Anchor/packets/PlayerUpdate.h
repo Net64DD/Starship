@@ -3,15 +3,15 @@
 #include "IPacket.h"
 
 class PlayerUpdateState : public IPacket {
-  public:
+public:
     explicit PlayerUpdateState(Player* player) : IPacket(Anchor::PLAYER_UPDATE), player(player) {}
     explicit PlayerUpdateState() : IPacket(Anchor::PLAYER_UPDATE), player(nullptr) {}
-  private:
+private:
     Player* player;
 
-    void onSend(nlohmann::json& payload) override {
+    bool onSend(nlohmann::json& payload) override {
         if(!Anchor::Instance->IsSaveLoaded()){
-            return;
+            return false;
         }
 
         uint32_t currentPlayerCount = 0;
@@ -21,7 +21,7 @@ class PlayerUpdateState : public IPacket {
             }
         }
         if (currentPlayerCount == 0) {
-            return;
+            return false;
         }
 
         payload["roomState"] = Chrono::PrepRoomState();
@@ -33,6 +33,7 @@ class PlayerUpdateState : public IPacket {
         payload["state"] = player->state;
         payload["form"] = player->form;
         payload["zRotBarrelRoll"] = player->zRotBarrelRoll;
+        return true;
     }
 
     void onReceive(nlohmann::json& payload) override {

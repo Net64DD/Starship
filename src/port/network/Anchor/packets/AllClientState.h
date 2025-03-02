@@ -4,7 +4,7 @@
 #include "port/notification/notification.h"
 
 class AllClientState : public IPacket {
-  public:
+public:
     explicit AllClientState() : IPacket(Anchor::ALL_CLIENT_STATE) {}
 
     void onReceive(nlohmann::json& payload) override {

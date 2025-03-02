@@ -116,7 +116,7 @@ void Anchor::RefreshClientActors() {
         return;
     }
 
-    for(int i = 60; i < sizeof(gActors); i++){
+    for(int i = 60; i < ARRAY_COUNT(gActors); i++){
         Actor* actor = &gActors[i];
         if(actor->obj.status == OBJ_INIT){
             Actor_Despawn(actor);
