@@ -37,6 +37,7 @@ private:
     }
 
     void onReceive(nlohmann::json& payload) override {
+        bool shouldRefreshActors = false;
         uint32_t clientId = payload["clientId"].get<uint32_t>();
 
         if (!Anchor::Instance->clients.contains(clientId)) {
@@ -44,6 +45,11 @@ private:
         }
 
         auto& client = Anchor::Instance->clients[clientId];
+
+        if (client.player == nullptr) {
+            shouldRefreshActors = true;
+        }
+
         client.planetIdx = GetSafeNode<int16_t>(payload, "planetIdx");
         client.pos = GetSafeNode<Vec3f>(payload, "pos");
         client.rot = GetSafeNode<Vec3f>(payload, "rot");
@@ -52,5 +58,9 @@ private:
         client.state = GetSafeNode<PlayerState>(payload, "state");
         client.form = GetSafeNode<PlayerForm>(payload, "form");
         client.zRotBarrelRoll = GetSafeNode<float>(payload, "zRotBarrelRoll");
+
+        if (shouldRefreshActors) {
+            Anchor::Instance->RefreshClientActors();
+        }
     }
 };

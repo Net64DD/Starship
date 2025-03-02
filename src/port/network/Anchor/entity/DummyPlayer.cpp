@@ -22,7 +22,6 @@ extern "C" void DummyActor_Update(ActorTeamArwing* actor) {
     f32 xDisplacement;
     f32 yDisplacement;
     f32 zDisplacement;
-    Scenery360* scenery360;
     f32 yaw;
     f32 var_fv0;
     Vec3f sp48;
@@ -46,7 +45,7 @@ extern "C" void DummyActor_Update(ActorTeamArwing* actor) {
     actor->obj.pos = client.pos;
     actor->rot_0F4 = client.rot;
     actor->state = client.state;
-    actor->fwork[2] = client.zRotBarrelRoll;
+    actor->fwork[2] = 0;
 
     xDisplacement = actor->fwork[3] - actor->obj.pos.x;
     yDisplacement = actor->fwork[4] - actor->obj.pos.y;

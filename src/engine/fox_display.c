@@ -1614,6 +1614,9 @@ void Display_ActorMarks(void) {
     f32 var_fs0;
 
     if ((gGameFrameCount & 4) == 0) {
+
+        CALL_CANCELLABLE_RETURN_EVENT(PreDisplayActorMarks);
+
         RCP_SetupDL_40();
 
         for (i = 0; i < ARRAY_COUNT(gTeamArrowsViewPos); i++) {
@@ -1652,6 +1655,8 @@ void Display_ActorMarks(void) {
             gTeamArrowsViewPos[i].z = 100.0f;
         }
         gDPSetTextureFilter(gMasterDisp++, G_TF_BILERP);
+
+        CALL_CANCELLABLE_RETURN_EVENT(PostDisplayActorMarks);
     }
 }
 

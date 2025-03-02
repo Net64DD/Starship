@@ -92,6 +92,7 @@ void Anchor::OnIncomingJson(nlohmann::json payload) {
 EventID UpdatePlayerID;
 EventID ObjectInitID;
 EventID PlayInitID;
+EventID ActorMarkID;
 
 void OnPlayInit(IEvent* ev){
     SEND_PACKET(UpdateClientState);
@@ -112,12 +113,14 @@ void Anchor::RegisterHooks() {
     });
 
     PlayInitID = REGISTER_LISTENER(PostPlayInitEvent, EVENT_PRIORITY_NORMAL, OnPlayInit);
+    ActorMarkID = REGISTER_LISTENER(PostDisplayActorMarks, EVENT_PRIORITY_NORMAL, Chrono::DrawNetworkActorMarks);
 }
 
 void Anchor::UnregisterHooks() {
     UNREGISTER_LISTENER(PlayerPostUpdateEvent, UpdatePlayerID);
     UNREGISTER_LISTENER(ObjectInitEvent, ObjectInitID);
     UNREGISTER_LISTENER(PostPlayInitEvent, PlayInitID);
+    UNREGISTER_LISTENER(PostDisplayActorMarks, ActorMarkID);
 }
 
 // MARK: - Misc/Helpers
