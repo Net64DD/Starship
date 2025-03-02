@@ -89,6 +89,7 @@ namespace UIWidgets {
     void DrawFlagArray32(const std::string& name, uint32_t& flags);
     void DrawFlagArray16(const std::string& name, uint16_t& flags);
     void DrawFlagArray8(const std::string& name, uint8_t& flags);
+    bool InputString(const char* label, std::string* value, ImGuiInputTextFlags flags = 0);
 
     // V2
     namespace Colors {

@@ -40,6 +40,10 @@
 #include "audio/GameAudio.h"
 #include "port/patches/DisplayListPatch.h"
 #include "port/mods/PortEnhancements.h"
+#ifdef USE_NETWORKING
+#include "port/network/Anchor/Anchor.h"
+#endif
+
 
 #include <Fast3D/gfx_pc.h>
 #include <filesystem>
@@ -57,6 +61,7 @@ void AudioThread_CreateNextAudioBuffer(int16_t* samples, uint32_t num_samples);
 
 std::vector<uint8_t*> MemoryPool;
 GameEngine* GameEngine::Instance;
+Anchor* Anchor::Instance;
 
 GameEngine::GameEngine() {
     std::vector<std::string> archiveFiles;
@@ -250,6 +255,14 @@ GameEngine::GameEngine() {
     prevAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0);
     gEnableGammaBoost = CVarGetInteger("gGraphics.GammaMode", 0) == 0;
     context->GetResourceManager()->SetAltAssetsEnabled(prevAltAssets);
+
+#ifdef USE_NETWORKING
+    Anchor::Instance = new Anchor();
+    SDLNet_Init();
+    if (CVarGetInteger(CVAR_REMOTE_ANCHOR("Enabled"), 0)) {
+        Anchor::Instance->Enable();
+    }
+#endif
 }
 
 bool GameEngine::GenAssetFile() {
@@ -289,6 +302,12 @@ void GameEngine::Destroy() {
         free(ptr);
     }
     MemoryPool.clear();
+#ifdef USE_NETWORKING
+    if (CVarGetInteger(CVAR_REMOTE_ANCHOR("Enabled"), 0)) {
+        Anchor::Instance->Disable();
+    }
+    SDLNet_Quit();
+#endif
 }
 
 void GameEngine::StartFrame() const {
