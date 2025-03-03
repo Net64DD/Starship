@@ -29,7 +29,8 @@ extern "C" void DummyActor_Update(ActorTeamArwing* actor) {
     f32 temp_fv1;
 
     if (!Anchor::Instance->clients.contains(actor->iwork[24])) {
-        Actor_Despawn(actor);
+        actor->iwork[24] = 0;
+        Object_Kill(&actor->obj, actor->sfxSource);
         return;
     }
 
@@ -68,20 +69,21 @@ extern "C" void DummyActor_Update(ActorTeamArwing* actor) {
 
     Math_SmoothStepToF(&actor->fwork[0], actor->fwork[1], 0.2f, 3.0f, 0.00001f);
 
-    yaw = Math_RadToDeg(Math_Atan2F(xDisplacement, zDisplacement));
+//    yaw = Math_RadToDeg(Math_Atan2F(xDisplacement, zDisplacement));
 
-    Math_SmoothStepToAngle(&actor->rot_0F4.x,
-                           Math_RadToDeg(Math_Atan2F(yDisplacement, sqrtf(SQ(xDisplacement) + SQ(zDisplacement)))),
-                           0.1f, actor->fwork[2], 0.0f);
+//    Math_SmoothStepToAngle(&actor->rot_0F4.x,
+//                           Math_RadToDeg(Math_Atan2F(yDisplacement, sqrtf(SQ(xDisplacement) + SQ(zDisplacement)))),
+//                           0.1f, actor->fwork[2], 0.0f);
+//
+//    temp_fv1 = Math_SmoothStepToAngle(&actor->rot_0F4.y, yaw, 0.1f, actor->fwork[2], 0.0001f) * 40.0f;
+//    if (temp_fv1 < 0.0f) {
+//        var_fv0 = temp_fv1 * -1.0f;
+//    } else {
+//        var_fv0 = 360.0f - temp_fv1;
+//    }
+//    Math_SmoothStepToAngle(&actor->obj.rot.z, var_fv0, 0.1f, 3.0f, 0.01f);
 
-    temp_fv1 = Math_SmoothStepToAngle(&actor->rot_0F4.y, yaw, 0.1f, actor->fwork[2], 0.0001f) * 40.0f;
-    if (temp_fv1 < 0.0f) {
-        var_fv0 = temp_fv1 * -1.0f;
-    } else {
-        var_fv0 = 360.0f - temp_fv1;
-    }
-    Math_SmoothStepToAngle(&actor->obj.rot.z, var_fv0, 0.1f, 3.0f, 0.01f);
-
+    actor->rot_0F4.y = 180 + actor->rot_0F4.y;
     actor->obj.rot.y = actor->rot_0F4.y;
     actor->obj.rot.x = -actor->rot_0F4.x;
 

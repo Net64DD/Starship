@@ -91,6 +91,7 @@ void Object_PlayerSfx(f32* pos, u32 sfxId, s32 playerNum) {
 }
 
 void Object_Kill(Object* obj, f32* sfxSrc) {
+    CALL_CANCELLABLE_RETURN_EVENT(ObjectKillEvent, OBJECT_TYPE_ACTOR, obj, sfxSrc);
     obj->status = OBJ_FREE;
     Audio_KillSfxBySource(sfxSrc);
 }

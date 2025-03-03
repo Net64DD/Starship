@@ -21,6 +21,7 @@ extern "C" {
 #include "sys.h"
 #include <sf64audio_provisional.h>
 #include <sf64context.h>
+void Game_SetScene(void);
 }
 
 namespace GameUI {
@@ -451,7 +452,8 @@ void DrawGameMenu() {
                 "Ctrl+R"
 #endif
         )) {
-            gNextGameState = GSTATE_BOOT;
+            gGameState = GSTATE_INIT;
+            Game_SetScene();
         }
 #if !defined(__SWITCH__) && !defined(__WIIU__)
 

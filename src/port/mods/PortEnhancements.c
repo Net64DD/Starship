@@ -481,6 +481,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(ObjectDrawPreSetupEvent);
     REGISTER_EVENT(ObjectDrawPostSetupEvent);
     REGISTER_EVENT(ObjectDestroyEvent);
+    REGISTER_EVENT(ObjectKillEvent);
 
     // Register player action events
     REGISTER_EVENT(PlayerActionBoostEvent);

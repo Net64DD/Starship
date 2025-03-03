@@ -40,24 +40,22 @@ private:
         bool shouldRefreshActors = false;
         uint32_t clientId = payload["clientId"].get<uint32_t>();
 
-        if (!Anchor::Instance->clients.contains(clientId)) {
-            return;
+        if (Anchor::Instance->clients.contains(clientId)) {
+            auto& client = Anchor::Instance->clients[clientId];
+
+            if (client.player == nullptr) {
+                shouldRefreshActors = true;
+            }
+
+            client.planetIdx = GetSafeNode<int16_t>(payload, "planetIdx");
+            client.pos = GetSafeNode<Vec3f>(payload, "pos");
+            client.rot = GetSafeNode<Vec3f>(payload, "rot");
+            client.boostSpeed = GetSafeNode<float>(payload, "boostSpeed");
+            client.boostActive = GetSafeNode<bool>(payload, "boostActive");
+            client.state = GetSafeNode<PlayerState>(payload, "state");
+            client.form = GetSafeNode<PlayerForm>(payload, "form");
+            client.zRotBarrelRoll = GetSafeNode<float>(payload, "zRotBarrelRoll");
         }
-
-        auto& client = Anchor::Instance->clients[clientId];
-
-        if (client.player == nullptr) {
-            shouldRefreshActors = true;
-        }
-
-        client.planetIdx = GetSafeNode<int16_t>(payload, "planetIdx");
-        client.pos = GetSafeNode<Vec3f>(payload, "pos");
-        client.rot = GetSafeNode<Vec3f>(payload, "rot");
-        client.boostSpeed = GetSafeNode<float>(payload, "boostSpeed");
-        client.boostActive = GetSafeNode<bool>(payload, "boostActive");
-        client.state = GetSafeNode<PlayerState>(payload, "state");
-        client.form = GetSafeNode<PlayerForm>(payload, "form");
-        client.zRotBarrelRoll = GetSafeNode<float>(payload, "zRotBarrelRoll");
 
         if (shouldRefreshActors) {
             Anchor::Instance->RefreshClientActors();

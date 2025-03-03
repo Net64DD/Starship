@@ -92,15 +92,9 @@ void Anchor::OnIncomingJson(nlohmann::json payload) {
 EventID UpdatePlayerID;
 EventID ObjectInitID;
 EventID PlayInitID;
+EventID LoadSceneID;
 EventID ActorMarkID;
-
-void OnPlayInit(IEvent* ev){
-    SEND_PACKET(UpdateClientState);
-
-    if (Anchor::Instance->IsSaveLoaded()) {
-        Anchor::Instance->RefreshClientActors();
-    }
-}
+EventID KillActorID;
 
 void Anchor::RegisterHooks() {
     UpdatePlayerID = REGISTER_LISTENER(PlayerPostUpdateEvent, EVENT_PRIORITY_NORMAL, [](IEvent* ev){
@@ -112,7 +106,27 @@ void Anchor::RegisterHooks() {
         SEND_PACKET(UpdateClientState);
     });
 
-    PlayInitID = REGISTER_LISTENER(PostPlayInitEvent, EVENT_PRIORITY_NORMAL, OnPlayInit);
+    KillActorID = REGISTER_LISTENER(ObjectKillEvent, EVENT_PRIORITY_NORMAL, [](IEvent* ev) {
+        auto event = (ObjectKillEvent*) ev;
+        if(event->object->id != OBJ_ACTOR_DUMMY){
+            return;
+        }
+
+        if(((Actor*)event->object)->iwork[24] == 0) {
+            return;
+        }
+
+        ev->cancelled = true;
+    });
+
+    PlayInitID = REGISTER_LISTENER(PostPlayInitEvent, EVENT_PRIORITY_NORMAL, [](IEvent* ev) {
+        SEND_PACKET(UpdateClientState);
+        Anchor::Instance->RefreshClientActors();
+    });
+    LoadSceneID = REGISTER_LISTENER(LoadSceneEvent, EVENT_PRIORITY_NORMAL, [](IEvent* ev) {
+        SEND_PACKET(UpdateClientState);
+        Anchor::Instance->RefreshClientActors();
+    });
     ActorMarkID = REGISTER_LISTENER(PostDisplayActorMarks, EVENT_PRIORITY_NORMAL, Chrono::DrawNetworkActorMarks);
 }
 
@@ -120,7 +134,9 @@ void Anchor::UnregisterHooks() {
     UNREGISTER_LISTENER(PlayerPostUpdateEvent, UpdatePlayerID);
     UNREGISTER_LISTENER(ObjectInitEvent, ObjectInitID);
     UNREGISTER_LISTENER(PostPlayInitEvent, PlayInitID);
+    UNREGISTER_LISTENER(LoadSceneEvent, LoadSceneID);
     UNREGISTER_LISTENER(PostDisplayActorMarks, ActorMarkID);
+    UNREGISTER_LISTENER(ObjectKillEvent, KillActorID);
 }
 
 // MARK: - Misc/Helpers
@@ -134,14 +150,15 @@ void Anchor::RefreshClientActors() {
     for(int i = 0; i < ARRAY_COUNT(gActors); i++){
         Actor* actor = &gActors[i];
         if(actor->obj.status == OBJ_ACTIVE && actor->obj.id == OBJ_ACTOR_DUMMY){
-            Actor_Despawn(actor);
+            actor->iwork[24] = 0;
+            Object_Kill(&actor->obj, actor->sfxSource);
         }
     }
 
     actorIndexToClientId.clear();
     refreshingActors = true;
     for (auto& [clientId, client] : clients) {
-        if (!client.online || client.self) {
+        if (!client.online || client.self || !client.isSaveLoaded) {
             continue;
         }
 
@@ -149,9 +166,10 @@ void Anchor::RefreshClientActors() {
         // We are using a hook `ShouldActorInit` to override the init/update/draw/destroy functions of the Player we spawn
         // We quickly store a mapping of "index" to clientId, then within the init function we use this to get the clientId
         // and store it on player->zTargetActiveTimer (unused s32 for the dummy) for convenience
-        auto dummy = Actor_Spawn(OBJ_ACTOR_DUMMY, client.pos.x,
-                                 client.pos.y, client.pos.z, client.rot.x, client.rot.y,
-                                 client.rot.z);
+        auto dummy = Game_SpawnActor(OBJ_ACTOR_DUMMY);
+        dummy->obj.pos = client.pos;
+        dummy->obj.rot = client.rot;
+
         dummy->iwork[11] = 1;
         dummy->iwork[TEAM_FACE] = FACE_FOX;
         dummy->iwork[24] = actorIndexToClientId[actorIndexToClientId.size() - 1];

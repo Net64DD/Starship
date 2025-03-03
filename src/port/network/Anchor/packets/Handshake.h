@@ -29,7 +29,7 @@ public:
             return;
         }
 
-        auto room = Anchor::Instance->roomState;
+        auto& room = Anchor::Instance->roomState;
 
         room.ownerClientId = payload["state"]["ownerClientId"].get<uint32_t>();
         room.pvpMode = payload["state"]["pvpMode"].get<u8>();
