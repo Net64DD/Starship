@@ -14,6 +14,7 @@
 #include "packets/PlayerUpdate.h"
 #include "packets/AllClientState.h"
 #include "port/hooks/Events.h"
+#include "entity/Nametag.h"
 
 std::unordered_map<std::string, std::unique_ptr<IPacket>> RegisteredPackets;
 
@@ -90,7 +91,6 @@ void Anchor::OnIncomingJson(nlohmann::json payload) {
 }
 
 EventID UpdatePlayerID;
-EventID ObjectInitID;
 EventID PlayInitID;
 EventID LoadSceneID;
 EventID ActorMarkID;
@@ -100,10 +100,6 @@ void Anchor::RegisterHooks() {
     UpdatePlayerID = REGISTER_LISTENER(PlayerPostUpdateEvent, EVENT_PRIORITY_NORMAL, [](IEvent* ev){
         auto event = (PlayerPostUpdateEvent*) ev;
         SEND_PACKET(PlayerUpdateState, event->player);
-    });
-
-    ObjectInitID = REGISTER_LISTENER(ObjectInitEvent, EVENT_PRIORITY_NORMAL, [](IEvent* ev){
-        SEND_PACKET(UpdateClientState);
     });
 
     KillActorID = REGISTER_LISTENER(ObjectKillEvent, EVENT_PRIORITY_NORMAL, [](IEvent* ev) {
@@ -132,7 +128,6 @@ void Anchor::RegisterHooks() {
 
 void Anchor::UnregisterHooks() {
     UNREGISTER_LISTENER(PlayerPostUpdateEvent, UpdatePlayerID);
-    UNREGISTER_LISTENER(ObjectInitEvent, ObjectInitID);
     UNREGISTER_LISTENER(PostPlayInitEvent, PlayInitID);
     UNREGISTER_LISTENER(LoadSceneEvent, LoadSceneID);
     UNREGISTER_LISTENER(PostDisplayActorMarks, ActorMarkID);
@@ -174,6 +169,7 @@ void Anchor::RefreshClientActors() {
         dummy->iwork[TEAM_FACE] = FACE_FOX;
         dummy->iwork[24] = actorIndexToClientId[actorIndexToClientId.size() - 1];
         client.player = dummy;
+        NameTag_RegisterForActorWithOptions(dummy, client.name.c_str(), { .yOffset = 30 });
     }
     refreshingActors = false;
 }

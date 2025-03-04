@@ -43,6 +43,7 @@
 #ifdef USE_NETWORKING
 #include "port/network/Anchor/Anchor.h"
 #endif
+#include "port/Network/Anchor/entity/Nametag.h"
 
 
 #include <Fast3D/gfx_pc.h>
@@ -293,6 +294,7 @@ void GameEngine::Create() {
     CVarRegisterInteger("gControlNav", 1); // always enable controller nav on switch/wii u
 #endif
     PortEnhancements_Init();
+    NameTag_RegisterHooks();
 }
 
 void GameEngine::Destroy() {

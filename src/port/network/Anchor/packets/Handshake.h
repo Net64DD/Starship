@@ -63,5 +63,7 @@ public:
         Anchor::Instance->clients[clientId].isSaveLoaded = client.isSaveLoaded;
         Anchor::Instance->clients[clientId].isGameComplete = client.isGameComplete;
         Anchor::Instance->clients[clientId].planetIdx = client.planetIdx;
+
+        Anchor::Instance->RefreshClientActors();
     }
 };
