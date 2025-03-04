@@ -9,10 +9,15 @@ DEFINE_EVENT(DisplayPostUpdateEvent);
 DEFINE_EVENT(GamePreUpdateEvent);
 DEFINE_EVENT(GamePostUpdateEvent);
 
+DEFINE_EVENT(PrePlayInitEvent);
+DEFINE_EVENT(PostPlayInitEvent);
 DEFINE_EVENT(PlayUpdateEvent);
 
 DEFINE_EVENT(PlayerPreUpdateEvent, Player* player;);
 DEFINE_EVENT(PlayerPostUpdateEvent, Player* player;);
+
+DEFINE_EVENT(PreDisplayActorMarks);
+DEFINE_EVENT(PostDisplayActorMarks);
 
 DEFINE_EVENT(DrawRadarHUDEvent);
 DEFINE_EVENT(DrawRadarMarkArwingEvent, s32 colorIdx;);
@@ -29,3 +34,6 @@ DEFINE_EVENT(DrawBossHealthHUDEvent);
 
 DEFINE_EVENT(DrawGlobalHUDPreEvent);
 DEFINE_EVENT(DrawGlobalHUDPostEvent);
+DEFINE_EVENT(LoadSceneEvent, u8 sceneId;);
+DEFINE_EVENT(PreLevelStartEvent, LevelId level;);
+DEFINE_EVENT(PostLevelStartEvent, LevelId level;);

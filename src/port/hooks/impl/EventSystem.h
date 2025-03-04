@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-typedef uint32_t EventID;
+typedef int32_t EventID;
 typedef uint32_t ListenerID;
 
 typedef enum {
@@ -24,14 +24,6 @@ typedef struct {
     EventCallback function;
 } EventListener;
 
-#ifdef INIT_EVENT_IDS
-#define DECLARE_EVENT(eventName) \
-    uint32_t eventName##ID = -1;
-#else
-#define DECLARE_EVENT(eventName) \
-    extern uint32_t eventName##ID;
-#endif
-
 #define DEFINE_EVENT(eventName, ...) \
     typedef struct { \
         IEvent event; \
@@ -39,6 +31,46 @@ typedef struct {
     } eventName; \
     \
     DECLARE_EVENT(eventName)
+
+#ifdef __cplusplus
+#include <array>
+#include <vector>
+#include <unordered_map>
+
+#ifdef INIT_EVENT_IDS
+#define DECLARE_EVENT(eventName) \
+    extern "C" EventID eventName##ID = -1;
+#else
+#define DECLARE_EVENT(eventName) \
+    extern "C" EventID eventName##ID;
+#endif
+
+#define REGISTER_LISTENER(eventType, priority, callback) \
+    EventSystem::Instance->RegisterListener(eventType##ID, callback, priority)
+
+#define UNREGISTER_LISTENER(eventType, listenerId) \
+    EventSystem::Instance->UnregisterListener(eventType##ID, listenerId)
+
+class EventSystem {
+public:
+    static EventSystem* Instance;
+    EventID RegisterEvent();
+    ListenerID RegisterListener(EventID id, EventCallback callback, EventPriority priority = EVENT_PRIORITY_NORMAL);
+    void UnregisterListener(EventID ev, ListenerID id);
+    void CallEvent(EventID id, IEvent* event);
+private:
+    std::unordered_map<EventID, std::vector<EventListener>> mEventListeners;
+    EventID mInternalEventID = 0;
+};
+#else
+
+#ifdef INIT_EVENT_IDS
+#define DECLARE_EVENT(eventName) \
+    EventID eventName##ID = -1;
+#else
+#define DECLARE_EVENT(eventName) \
+    extern EventID eventName##ID;
+#endif
 
 #define CALL_EVENT(eventType, ...) \
     eventType eventType##_ = { {false}, __VA_ARGS__ }; \
@@ -65,23 +97,6 @@ typedef struct {
 #define REGISTER_LISTENER(eventType, callback, priority) \
     EventSystem_RegisterListener(eventType##ID, callback, priority);
 
-#ifdef __cplusplus
-#include <array>
-#include <vector>
-#include <unordered_map>
-
-class EventSystem {
-public:
-    static EventSystem* Instance;
-    EventID RegisterEvent();
-    ListenerID RegisterListener(EventID id, EventCallback callback, EventPriority priority = EVENT_PRIORITY_NORMAL);
-    void UnregisterListener(EventID ev, ListenerID id);
-    void CallEvent(EventID id, IEvent* event);
-private:
-    std::unordered_map<EventID, std::vector<EventListener>> mEventListeners;
-    EventID mInternalEventID = 0;
-};
-#else
 extern EventID EventSystem_RegisterEvent();
 extern ListenerID EventSystem_RegisterListener(EventID id, EventCallback callback, EventPriority priority);
 extern void EventSystem_UnregisterListener(EventID ev, ListenerID id);

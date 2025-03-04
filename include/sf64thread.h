@@ -74,6 +74,10 @@ typedef struct {
     /* 0x23550 */ Lightsn lights[0x100 * 4];
 } GfxPool; // size = 0x2AD50, 0x8 aligned
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void Controller_Init(void);
 void Controller_UpdateInput(void);
 void Controller_ReadData(void);
@@ -120,7 +124,11 @@ extern u8 gSerialThreadStack[0x1000]; // 800E0FB0
 extern SPTask* gCurrentTask;
 extern SPTask* sAudioTasks[1];
 extern SPTask* sGfxTasks[2];
+#ifdef AVOID_UB
+extern SPTask* sNewAudioTasks[2];
+#else
 extern SPTask* sNewAudioTasks[1];
+#endif
 extern SPTask* sNewGfxTasks[2];
 extern u32 gSegments[16]; // 800E1FD0
 extern OSMesgQueue gPiMgrCmdQueue; // 800E2010
@@ -181,6 +189,10 @@ extern u8 sIdleThreadStack[0x1000]; // 801390A0
 extern OSThread gMainThread; // 8013A040
 extern u8 sMainThreadStack[0x1000]; // 8013A1F0
 extern OSThread gAudioThread; //8013B1F0
+
+#ifdef __cplusplus
+}
+#endif
 
 #define MESG_QUEUE_EMPTY -1
 

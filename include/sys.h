@@ -22,6 +22,10 @@
 
 typedef s32 (*CompareFunc)(void*, void*);
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 s32 Lib_vsPrintf(char* dst, const char* fmt, va_list args);
 void Lib_vTable(s32 index, void (**table)(s32, s32), s32 arg0, s32 arg1);
 void Lib_QuickSort(u8* first, u32 length, u32 size, CompareFunc cFunc);
@@ -58,6 +62,10 @@ extern u8 gGameStandby;
 extern f32 gFovY;
 extern f32 gProjectNear;
 extern f32 gProjectFar;
+
+#ifdef __cplusplus
+}
+#endif
 
 typedef enum OptionState {
     OPTION_WAIT,

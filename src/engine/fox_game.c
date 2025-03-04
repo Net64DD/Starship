@@ -142,6 +142,7 @@ bool Game_ChangeScene(void) {
     if (gSceneId != sCurrentSceneId) {
         sHoldTimer = 2;
         sCurrentSceneId = gSceneId;
+        CALL_EVENT(LoadSceneEvent, sCurrentSceneId);
     }
     if (sHoldTimer == 0) {
         sSceneSelect = sCurrentSceneId;

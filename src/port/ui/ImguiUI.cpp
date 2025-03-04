@@ -13,11 +13,15 @@
 #include "port/Engine.h"
 #include "port/notification/notification.h"
 #include "utils/StringHelper.h"
+#ifdef USE_NETWORKING
+#include "port/network/Anchor/Anchor.h"
+#endif
 
 extern "C" {
 #include "sys.h"
 #include <sf64audio_provisional.h>
 #include <sf64context.h>
+void Game_SetScene(void);
 }
 
 namespace GameUI {
@@ -27,6 +31,9 @@ std::shared_ptr<Ship::GuiWindow> mStatsWindow;
 std::shared_ptr<Ship::GuiWindow> mInputEditorWindow;
 std::shared_ptr<Ship::GuiWindow> mGfxDebuggerWindow;
 std::shared_ptr<Notification::Window> mNotificationWindow;
+#ifdef USE_NETWORKING
+std::shared_ptr<AnchorRoomWindow> mAnchorRoomWindow;
+#endif
 std::shared_ptr<AdvancedResolutionSettings::AdvancedResolutionSettingsWindow> mAdvancedResolutionSettingsWindow;
 
 void SetupGuiElements() {
@@ -74,6 +81,10 @@ void SetupGuiElements() {
     mNotificationWindow = std::make_shared<Notification::Window>("gNotifications", "Notifications Window");
     gui->AddGuiWindow(mNotificationWindow);
     mNotificationWindow->Show();
+#ifdef USE_NETWORKING
+    mAnchorRoomWindow = std::make_shared<AnchorRoomWindow>("gAnchorRoom", "Anchor Room");
+    gui->AddGuiWindow(mAnchorRoomWindow);
+#endif
 }
 
 void Destroy() {
@@ -441,7 +452,8 @@ void DrawGameMenu() {
                 "Ctrl+R"
 #endif
         )) {
-            gNextGameState = GSTATE_BOOT;
+            gGameState = GSTATE_INIT;
+            Game_SetScene();
         }
 #if !defined(__SWITCH__) && !defined(__WIIU__)
 
@@ -757,6 +769,15 @@ void DrawDebugMenu() {
     }
 }
 
+#ifdef USE_NETWORKING
+void DrawAnchorMenu() {
+    if (ImGui::BeginMenu("Network")) {
+        Anchor::Instance->DrawMenu();
+        ImGui::EndMenu();
+    }
+}
+#endif
+
 void GameMenuBar::DrawElement() {
     if(ImGui::BeginMenuBar()){
         DrawMenuBarIcon();
@@ -777,9 +798,13 @@ void GameMenuBar::DrawElement() {
 
         ImGui::SetCursorPosY(0.0f);
 
+        DrawDebugMenu();
+
+#ifdef USE_NETWORKING
         ImGui::SetCursorPosY(0.0f);
 
-        DrawDebugMenu();
+        DrawAnchorMenu();
+#endif
 
         ImGui::EndMenuBar();
     }

@@ -444,10 +444,15 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(GamePreUpdateEvent);
     REGISTER_EVENT(GamePostUpdateEvent);
 
+    REGISTER_EVENT(PrePlayInitEvent);
+    REGISTER_EVENT(PostPlayInitEvent);
     REGISTER_EVENT(PlayUpdateEvent);
 
     REGISTER_EVENT(PlayerPreUpdateEvent);
     REGISTER_EVENT(PlayerPostUpdateEvent);
+
+    REGISTER_EVENT(PreDisplayActorMarks);
+    REGISTER_EVENT(PostDisplayActorMarks);
 
     REGISTER_EVENT(DrawRadarHUDEvent);
     REGISTER_EVENT(DrawRadarMarkArwingEvent);
@@ -463,6 +468,9 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(DrawBossHealthHUDEvent);
     REGISTER_EVENT(DrawGlobalHUDPreEvent);
     REGISTER_EVENT(DrawGlobalHUDPostEvent);
+    REGISTER_EVENT(LoadSceneEvent);
+    REGISTER_EVENT(PreLevelStartEvent);
+    REGISTER_EVENT(PostLevelStartEvent);
 
     // Register item events
     REGISTER_EVENT(ItemDropEvent);
@@ -473,6 +481,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(ObjectDrawPreSetupEvent);
     REGISTER_EVENT(ObjectDrawPostSetupEvent);
     REGISTER_EVENT(ObjectDestroyEvent);
+    REGISTER_EVENT(ObjectKillEvent);
 
     // Register player action events
     REGISTER_EVENT(PlayerActionBoostEvent);

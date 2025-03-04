@@ -185,6 +185,7 @@ u8 Load_SceneSetup(u8 sceneId, u8 sceneSetup) {
             changeScene = false;
             break;
     }
+
     return changeScene;
 }
 

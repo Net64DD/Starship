@@ -2823,6 +2823,8 @@ void Player_InitVersus(void) {
 void Play_Init(void) {
     s32 i;
 
+    CALL_CANCELLABLE_RETURN_EVENT(PrePlayInitEvent);
+
     gArwingSpeed = 40.0f;
     for (i = 0; i < ARRAY_COUNT(gControllerRumbleEnabled); i++) {
         gControllerRumbleEnabled[i] = 0;
@@ -3011,6 +3013,7 @@ void Play_Init(void) {
         }
     }
     Play_InitLevel();
+    CALL_EVENT(PostPlayInitEvent);
 }
 
 void Player_SetupArwingShot(Player* player, PlayerShot* shot, f32 arg2, f32 arg3, PlayerShotId shotId, f32 speed) {

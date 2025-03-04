@@ -1023,4 +1023,17 @@ namespace UIWidgets {
         }
         return dirty;
     }
+
+    int InputTextResizeCallback(ImGuiInputTextCallbackData* data) {
+        auto value = (std::string*)data->UserData;
+        if (data->EventFlag == ImGuiInputTextFlags_CallbackResize) {
+            value->resize(data->BufTextLen);
+            data->Buf = (char*)value->c_str();
+        }
+        return 0;
+    }
+
+    bool InputString(const char* label, std::string* value, ImGuiInputTextFlags flags) {
+        return ImGui::InputText(label, (char*)value->c_str(), value->capacity() + 1, ImGuiInputTextFlags_CallbackResize | flags, InputTextResizeCallback, value);
+    }
 }

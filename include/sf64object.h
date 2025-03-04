@@ -716,7 +716,8 @@ typedef enum ObjectId {
     /* 397 */ OBJ_EFFECT_397,
     /* 398 */ OBJ_EFFECT_398,
     /* 399 */ OBJ_EFFECT_399,
-    /* 400 */ OBJ_ENV_SMALL_ROCKS_ENABLE,
+    /* 400 */ OBJ_ACTOR_DUMMY = 400,
+    /* 400 */ OBJ_ENV_SMALL_ROCKS_ENABLE = 400,
     /* 401 */ OBJ_ENV_SMALL_ROCKS_DISABLE,
     /* 402 */ OBJ_UNK_402,
     /* 403 */ OBJ_UNK_403,
@@ -820,8 +821,15 @@ typedef enum ActorCutsceneModels {
     /* 1000 */ ACTOR_CS_JAMES_ARWING = 1000 // James McCloud Arwing seen for the last time in the ending CS.
 } ActorCutsceneModels;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 Actor* Game_SpawnActor(ObjectId);
 
+#ifdef __cplusplus
+};
+#endif
 // template enums for boss work buffers
 
 typedef enum {
