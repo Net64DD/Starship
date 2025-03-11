@@ -430,6 +430,7 @@ if(MSVC)
               /W3;
               /MT
           >
+          /bigobj;
           /permissive-;
           /MP;
           ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
@@ -448,6 +449,7 @@ if(MSVC)
               /Gy;
               /MT
           >
+          /bigobj;
           /permissive-;
           /MP;
           /w;
