@@ -11,6 +11,7 @@
 #include <libultraship/libultraship.h>
 #include <Fast3D/gfx_pc.h>
 #include "port/Engine.h"
+#include "port/hooks/Events.h"
 #include "port/notification/notification.h"
 #include "utils/StringHelper.h"
 #include "src/port/lua/scripting.h"
@@ -514,10 +515,6 @@ void DrawEnhancementsMenu() {
                 .tooltip = "Restores the beta coin that got replaced with the gold ring"
             });
 
-            UIWidgets::CVarCheckbox("Beta: Restore beta boost/brake gauge", "gRestoreBetaBoostGauge", {
-                .tooltip = "Restores the beta boost gauge that was seen in some beta footage"
-            });
-
             ImGui::EndMenu();
         }
 
@@ -808,6 +805,8 @@ void GameMenuBar::DrawElement() {
         ImGui::SetCursorPosY(0.0f);
 
         DrawDebugMenu();
+
+        CALL_EVENT(EngineRenderMenubarEvent);
 
         ImGui::EndMenuBar();
     }
