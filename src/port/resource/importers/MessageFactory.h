@@ -1,4 +1,5 @@
 #pragma once
+#ifdef __cplusplus
 
 #include "Resource.h"
 #include "ResourceFactoryXML.h"
@@ -15,3 +16,6 @@ class ResourceFactoryXMLMessageV0 : public Ship::ResourceFactoryXML {
     std::shared_ptr<Ship::IResource> ReadResource(std::shared_ptr<Ship::File> file) override;
 };
 }; // namespace LUS
+#else
+extern int16_t Message_SearchCustomID(uint16_t* msg);
+#endif
