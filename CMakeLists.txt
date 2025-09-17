@@ -274,9 +274,12 @@ add_subdirectory(libultraship ${CMAKE_CURRENT_SOURCE_DIR}/libultraship)
 add_dependencies(${PROJECT_NAME} libultraship)
 target_link_libraries(${PROJECT_NAME} PRIVATE libultraship)
 
-find_path(TCC_INCLUDE_DIR libtcc.h PATHS /usr/include /usr/local/include)
-find_library(TCC_LIBRARY tcc PATHS /usr/lib /usr/local/lib)
-target_include_directories(${PROJECT_NAME} PRIVATE ${TCC_INCLUDE_DIR})
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    find_library(TCC_LIBRARY tcc PATHS ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+else()
+    find_library(TCC_LIBRARY tcc PATHS /usr/lib /usr/local/lib)
+endif()
+
 target_link_libraries(${PROJECT_NAME} PRIVATE ${TCC_LIBRARY})
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
