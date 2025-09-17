@@ -16,6 +16,7 @@ class ScriptingLayer {
     void Load(const std::string& path, uint32_t bindings, const std::shared_ptr<Ship::Archive>& archive);
     void Clean();
     void Reload();
+    void Exit();
 };
 
 extern "C" void LinkExterns(void* s);
