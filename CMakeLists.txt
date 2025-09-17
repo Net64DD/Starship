@@ -275,7 +275,9 @@ add_dependencies(${PROJECT_NAME} libultraship)
 target_link_libraries(${PROJECT_NAME} PRIVATE libultraship)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    find_library(TCC_LIBRARY tcc PATHS ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+    set(TCC_LIBRARY
+        "${CMAKE_CURRENT_SOURCE_DIR}/lib/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,libtcc1-64.a,libtcc1-32.a>"
+    )
 else()
     find_library(TCC_LIBRARY tcc PATHS /usr/lib /usr/local/lib)
 endif()
