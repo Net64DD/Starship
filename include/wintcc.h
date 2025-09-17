@@ -10,3 +10,4 @@ typedef int (*tcc_compile_string_func)(TCCState*, const char*);
 typedef int (*tcc_relocate_func)(TCCState*);
 typedef void* (*tcc_get_symbol_func)(TCCState*, const char*);
 typedef void (*tcc_delete_func)(TCCState*);
+typedef int (*tcc_add_symbol_func)(TCCState*, const char*, const void*);

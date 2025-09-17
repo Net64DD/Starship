@@ -83,20 +83,20 @@ void ScriptingLayer::Load(const std::string& path, uint32_t bindings, const std:
     const char* src = result.value().c_str();
 
     if (tcc_compile_string(s, src) == -1)
-        return 1;
+        return;
 
     LinkExterns((void*) s);
 
     /* relocate the code */
     if (tcc_relocate(s) < 0)
-        return 1;
+        return;
 
     RegisteredStates.push_back(s);
 
     /* get entry symbol */
     tcc_func entry = (tcc_func) tcc_get_symbol(s, "entry");
     if (!entry)
-        return 1;
+        return;
 
     /* run the code */
     entry();

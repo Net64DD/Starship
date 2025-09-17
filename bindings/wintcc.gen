@@ -1,7 +1,7 @@
 tcc_dll = LoadLibraryA("libtcc.dll");
 if (!tcc_dll) {
     fprintf(stderr, "Failed to load libtcc.dll\n");
-    return 1;
+    return;
 }
 
 // Load all function pointers
@@ -13,10 +13,11 @@ tcc_compile_string_func tcc_compile_string = (tcc_compile_string_func)GetProcAdd
 tcc_relocate_func tcc_relocate = (tcc_relocate_func)GetProcAddress(tcc_dll, "tcc_relocate");
 tcc_get_symbol_func tcc_get_symbol = (tcc_get_symbol_func)GetProcAddress(tcc_dll, "tcc_get_symbol");
 tcc_delete_func tcc_delete = (tcc_delete_func)GetProcAddress(tcc_dll, "tcc_delete");
+tcc_add_symbol_func tcc_add_symbol = (tcc_add_symbol_func)GetProcAddress(tcc_dll, "tcc_add_symbol");
 
 if (!tcc_new || !tcc_set_output_type || !tcc_add_include_path || !tcc_set_error_func ||
     !tcc_compile_string || !tcc_relocate || !tcc_get_symbol || !tcc_delete) {
     fprintf(stderr, "Failed to get one or more function addresses from libtcc.dll\n");
     FreeLibrary(tcc_dll);
-    return 1;
+    return;
 }
