@@ -10,7 +10,7 @@
 #include "stdbool.h"
 #include "stdint.h"
 #include "stddef.h"
-#include "string.h"
+// #include "string.h"
 #include "macros.h"
 #include "sf64math.h"
 #include "gfx.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "port/hooks/Events.h"
 
 void onPlayUpdate(IEvent* event)  {
