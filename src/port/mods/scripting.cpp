@@ -85,7 +85,7 @@ void ScriptingLayer::Load(const std::string& path, uint32_t bindings, const std:
     if (tcc_compile_string(s, src) == -1)
         return;
 
-    LinkExterns((void*) s);
+    LinkExterns((void*) s, (void*) tcc_add_symbol);
 
     /* relocate the code */
     if (tcc_relocate(s) < 0)

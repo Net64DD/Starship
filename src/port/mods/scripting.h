@@ -19,7 +19,7 @@ class ScriptingLayer {
     void Exit();
 };
 
-extern "C" void LinkExterns(void* s);
+extern "C" void LinkExterns(void* s, void* func);
 
 #else
 void BindEvent(const char* name, uint32_t id);
