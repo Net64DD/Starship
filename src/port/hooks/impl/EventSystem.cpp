@@ -1,6 +1,7 @@
 #include "EventSystem.h"
 #include <stdexcept>
 #include <algorithm>
+#include "port/notification/notification.h"
 
 EventSystem* EventSystem::Instance = new EventSystem();
 
@@ -8,23 +9,23 @@ EventID EventSystem::RegisterEvent() {
     return this->mInternalEventID++;
 }
 
-ListenerID EventSystem::RegisterListener(EventID id, EventCallback callback, EventPriority priority) {
+ListenerID EventSystem::RegisterListener(EventID id, const SmartFunctionCallback& callback, EventPriority priority) {
     if(id == -1) {
         throw std::runtime_error("Trying to register listener for unregistered event");
     }
 
     auto& listeners = this->mEventListeners[id];
 
-    if(std::find_if(listeners.begin(), listeners.end(), [callback](EventListener listener) {
+    if(std::find_if(listeners.begin(), listeners.end(), [callback](const EventListener& listener) {
         return listener.function == callback;
     }) != listeners.end()) {
         throw std::runtime_error("Listener already registered");
     }
 
-    listeners.push_back({ priority, callback });
+    listeners.push_back(EventListener{ priority, callback });
 
     // Sort by priority
-    std::sort(listeners.begin(), listeners.end(), [](EventListener a, EventListener b) {
+    std::sort(listeners.begin(), listeners.end(), [](const EventListener& a, const EventListener& b) {
         return a.priority < b.priority;
     });
 
@@ -41,7 +42,9 @@ void EventSystem::CallEvent(EventID id, IEvent* event) {
     auto& listeners = this->mEventListeners[id];
 
     for (auto& listener : listeners) {
-        listener.function(event);
+        if(is_type(listener.function, EventCallback)){
+            std::get<EventCallback>(listener.function)(event);
+        }
     }
 }
 
@@ -49,11 +52,11 @@ extern "C" EventID EventSystem_RegisterEvent() {
     return EventSystem::Instance->RegisterEvent();
 }
 
-extern "C" size_t EventSystem_RegisterListener(EventID id, EventCallback callback, EventPriority priority) {
+extern "C" ListenerID EventSystem_RegisterListener(EventID id, EventCallback callback, EventPriority priority) {
     return EventSystem::Instance->RegisterListener(id, callback, priority);
 }
 
-extern "C" void EventSystem_UnregisterListener(EventID ev, size_t id) {
+extern "C" void EventSystem_UnregisterListener(EventID ev, ListenerID id) {
     EventSystem::Instance->UnregisterListener(ev, id);
 }
 

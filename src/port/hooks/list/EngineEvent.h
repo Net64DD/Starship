@@ -1,7 +1,14 @@
 #pragma once
 
+#ifndef __cplusplus
 #include "global.h"
+#endif
 #include "port/hooks/impl/EventSystem.h"
+
+DEFINE_EVENT(EngineInitEvent);
+DEFINE_EVENT(EngineExitEvent);
+
+DEFINE_EVENT(EngineRenderMenubarEvent);
 
 DEFINE_EVENT(DisplayPreUpdateEvent);
 DEFINE_EVENT(DisplayPostUpdateEvent);
@@ -11,8 +18,10 @@ DEFINE_EVENT(GamePostUpdateEvent);
 
 DEFINE_EVENT(PlayUpdateEvent);
 
+#ifndef __cplusplus
 DEFINE_EVENT(PlayerPreUpdateEvent, Player* player;);
 DEFINE_EVENT(PlayerPostUpdateEvent, Player* player;);
+#endif
 
 DEFINE_EVENT(DrawRadarHUDEvent);
 DEFINE_EVENT(DrawRadarMarkArwingEvent, s32 colorIdx;);

@@ -13,6 +13,8 @@
 #include "port/Engine.h"
 #include "port/notification/notification.h"
 #include "utils/StringHelper.h"
+#include "port/mods/scripting.h"
+#include "port/hooks/list/EngineEvent.h"
 
 #ifdef __SWITCH__
 #include <port/switch/SwitchImpl.h>
@@ -764,6 +766,11 @@ void DrawDebugMenu() {
         }
 #endif
 
+        if(UIWidgets::Button("Reload Scripts")){
+            ScriptingLayer::Instance->Reload();
+            GameEngine::LoadManifest();
+        }
+
         UIWidgets::WindowButton("Gfx Debugger", "gGfxDebuggerEnabled", GameUI::mGfxDebuggerWindow, {
             .tooltip = "Enables the Gfx Debugger window, allowing you to input commands, type help for some examples"
         });
@@ -899,6 +906,8 @@ void GameMenuBar::DrawElement() {
         ImGui::SetCursorPosY(0.0f);
 
         DrawDebugMenu();
+
+        CALL_EVENT(EngineRenderMenubarEvent);
 
         ImGui::EndMenuBar();
     }

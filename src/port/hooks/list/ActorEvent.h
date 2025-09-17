@@ -17,25 +17,25 @@ typedef enum {
 
 DEFINE_EVENT(ObjectInitEvent,
     ObjectEventType type;
-    void* object;
+    Object* object;
 );
 
 DEFINE_EVENT(ObjectUpdateEvent,
     ObjectEventType type;
-    void* object;
+    Object* object;
 );
 
 DEFINE_EVENT(ObjectDrawPreSetupEvent,
     ObjectEventType type;
-    void* object;
+    Object* object;
 );
 
 DEFINE_EVENT(ObjectDrawPostSetupEvent,
     ObjectEventType type;
-    void* object;
+    Object* object;
 );
 
 DEFINE_EVENT(ObjectDestroyEvent,
     ObjectEventType type;
-    void* object;
+    Object* object;
 );

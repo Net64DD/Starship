@@ -3,7 +3,7 @@
 #define LOAD_ASSET(path) (path == NULL ? NULL : (GameEngine_OTRSigCheck((const char*) path) ? ResourceGetDataByName((const char*) path) : path))
 #define LOAD_ASSET_RAW(path) ResourceGetDataByName((const char*) path)
 
-typedef enum {
+typedef enum SF64Version {
     SF64_VER_US = 0x94F1D5A7,
     SF64_VER_EU = 0x6EE9ADE7,
     SF64_VER_JP = 0x3728D3E1
@@ -32,6 +32,7 @@ class GameEngine {
     void StartFrame() const;
     static bool GenAssetFile(bool exitOnFail = true);
     static void Create();
+    static void LoadManifest();
     static void HandleAudioThread();
     static void StartAudioFrame();
     static void EndAudioFrame();

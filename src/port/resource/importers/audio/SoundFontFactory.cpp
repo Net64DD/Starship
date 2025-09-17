@@ -141,7 +141,7 @@ void ResourceFactoryXMLSoundFontV0::ParseInstruments(SoundFont* soundFont, tinyx
             instrument->lowPitchTunedSample.tuning = instrumentElement->FloatAttribute("Tuning");
             const char* sampleStr = instrumentElement->Attribute("SampleRef");
             if (sampleStr != nullptr && sampleStr[0] != 0) {
-                auto res = static_pointer_cast<Sample>(
+                auto res = std::static_pointer_cast<Sample>(
                     Ship::Context::GetInstance()->GetResourceManager()->LoadResourceProcess(sampleStr, true));
                 auto sample = static_cast<SampleData*>(res ? res->GetRawPointer() : nullptr);
                 instrument->lowPitchTunedSample.sample = sample;
@@ -156,7 +156,7 @@ void ResourceFactoryXMLSoundFontV0::ParseInstruments(SoundFont* soundFont, tinyx
             instrument->normalPitchTunedSample.tuning = instrumentElement->FloatAttribute("Tuning");
             const char* sampleStr = instrumentElement->Attribute("SampleRef");
             if (sampleStr != nullptr && sampleStr[0] != 0) {
-                auto res = static_pointer_cast<Sample>(
+                auto res = std::static_pointer_cast<Sample>(
                     Ship::Context::GetInstance()->GetResourceManager()->LoadResourceProcess(sampleStr, true));
                 auto sample = static_cast<SampleData*>(res ? res->GetRawPointer() : nullptr);
                 instrument->normalPitchTunedSample.sample = sample;
@@ -171,7 +171,7 @@ void ResourceFactoryXMLSoundFontV0::ParseInstruments(SoundFont* soundFont, tinyx
             instrument->highPitchTunedSample.tuning = instrumentElement->FloatAttribute("Tuning");
             const char* sampleStr = instrumentElement->Attribute("SampleRef");
             if (sampleStr != nullptr && sampleStr[0] != 0) {
-                auto res = static_pointer_cast<Sample>(
+                auto res = std::static_pointer_cast<Sample>(
                     Ship::Context::GetInstance()->GetResourceManager()->LoadResourceProcess(sampleStr, true));
                 auto sample = static_cast<SampleData*>(res ? res->GetRawPointer() : nullptr);
                 instrument->highPitchTunedSample.sample = sample;

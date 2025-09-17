@@ -11,7 +11,7 @@ typedef struct {
 } MsgLookup;
 
 u16* Message_PtrFromId(u16 msgId);
-u16 Message_IdFromPtr(u16*);
+s16 Message_IdFromPtr(u16*);
 s32 Message_GetWidth(u16* msgPtr);
 s32 Message_GetCharCount(u16* msgPtr);
 void Message_DisplayChar(Gfx** gfxPtr, u16 msgChar, s32 xpos, s32 ypos);
