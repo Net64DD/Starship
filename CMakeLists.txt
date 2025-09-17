@@ -274,15 +274,10 @@ add_subdirectory(libultraship ${CMAKE_CURRENT_SOURCE_DIR}/libultraship)
 add_dependencies(${PROJECT_NAME} libultraship)
 target_link_libraries(${PROJECT_NAME} PRIVATE libultraship)
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(TCC_LIBRARY
-        "${CMAKE_CURRENT_SOURCE_DIR}/lib/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,libtcc1-64.a,libtcc1-32.a>"
-    )
-else()
+if (NOT WIN32)
     find_library(TCC_LIBRARY tcc PATHS /usr/lib /usr/local/lib)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${TCC_LIBRARY})
 endif()
-
-target_link_libraries(${PROJECT_NAME} PRIVATE ${TCC_LIBRARY})
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_definitions(${PROJECT_NAME} PRIVATE
@@ -611,6 +606,7 @@ add_custom_command(
 	TARGET ${PROJECT_NAME} POST_BUILD
 	COMMENT "Copying asset yamls..."
 	COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/config.yml" "$<TARGET_FILE_DIR:Starship>/config.yml"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/libs/libtcc.dll" "$<TARGET_FILE_DIR:Starship>/libtcc.dll"
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets/" "$<TARGET_FILE_DIR:Starship>/assets/"
 )
 

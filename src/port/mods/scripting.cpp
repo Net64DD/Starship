@@ -13,6 +13,11 @@
 #include "port/notification/notification.h"
 #include "port/hooks/impl/EventSystem.h"
 
+#ifdef _WIN32
+#include "wintcc.h"
+static HMODULE tcc_dll;
+#endif
+
 using namespace UIWidgets;
 
 namespace fs = std::filesystem;
@@ -51,6 +56,10 @@ void ScriptingLayer::Load(const std::string& path, uint32_t bindings, const std:
     if(!result.has_value()){
         return;
     }
+
+#ifdef _WIN32
+    #include "bindings/wintcc.gen"
+#endif
 
     TCCState* s = tcc_new();
     if (!s) {
@@ -111,6 +120,12 @@ void ScriptingLayer::Clean() {
 void ScriptingLayer::Reload() {
     this->Clean();
     this->Init();
+}
+
+void ScriptingLayer::Exit() {
+#ifdef _WIN32
+    FreeLibrary(tcc_dll);
+#endif
 }
 
 extern "C" void BindEvent(const char* name, EventID id) {
