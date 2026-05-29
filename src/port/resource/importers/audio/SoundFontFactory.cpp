@@ -86,6 +86,9 @@ void ResourceFactoryXMLSoundFontV0::ParseDrums(SoundFont* soundFont, tinyxml2::X
         if (sampleStr != nullptr && sampleStr[0] != 0) {
             auto res = Ship::Context::GetInstance()->GetResourceManager()->LoadResourceProcess(sampleStr);
             drum->tunedSample.sample = static_cast<SampleData*>(res ? res->GetRawPointer() : nullptr);
+            if (drum->tunedSample.sample != nullptr && drum->tunedSample.sample->tuning != 0.0f) {
+                drum->tunedSample.tuning = drum->tunedSample.sample->tuning;
+            }
         } else {
             drum->tunedSample.sample = nullptr;
         }
