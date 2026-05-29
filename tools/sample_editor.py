@@ -4338,6 +4338,16 @@ def cmd_gui(args):
             if not n_samples and not n_seqs:
                 return
             self._btn_write_all.state(["disabled"])
+            out_dir = self._outdir_var.get().strip()
+            if not out_dir:
+                out_dir = os.path.dirname(os.path.abspath(self._archive_path))
+            mod_name = os.path.splitext(os.path.basename(self._archive_path))[0]
+            mod_o2r  = os.path.join(out_dir, f"{mod_name}_audio_replacements.o2r")
+            try:
+                if os.path.isfile(mod_o2r):
+                    os.remove(mod_o2r)
+            except Exception:
+                pass
             if n_seqs:
                 self._seq_action_write_o2r()
             if n_samples:
