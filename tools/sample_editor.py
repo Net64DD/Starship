@@ -604,7 +604,8 @@ def list_samples(archive_path: str,
                 banks.add(font)
             used_by.append(f"{_font_short(font) if font else '?'}:{_path_tail(dpath)}(D)")
             provenance.append({"font": font, "inst_path": dpath, "slot": "drum", "tuning": t})
-            slot_tunings.setdefault("drum", t)
+            if "drum" not in slot_tunings or (t > 0 and t < slot_tunings["drum"]):
+                slot_tunings["drum"] = t
         info["banks"]       = sorted(banks)
         info["used_by"]     = sorted(used_by)
         info["provenance"]  = provenance

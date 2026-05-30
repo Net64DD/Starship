@@ -18,7 +18,7 @@ std::shared_ptr<Ship::IResource> ResourceFactoryBinaryDrumV0::ReadResource(std::
     auto sample = LoadChild<SampleData*>(reader->ReadUInt64());
     float streamTuning = reader->ReadFloat();
     drum->mDrum.tunedSample.sample = sample;
-    drum->mDrum.tunedSample.tuning = (sample != nullptr && sample->tuning != 0.0f) ? sample->tuning : streamTuning;
+    drum->mDrum.tunedSample.tuning = (streamTuning != 0.0f) ? streamTuning : (sample != nullptr ? sample->tuning : 0.0f);
     drum->mDrum.envelope = LoadChild<EnvelopePointData*>(reader->ReadUInt64());
     drum->mDrum.isRelocated = 1;
 
