@@ -1342,13 +1342,21 @@ def _snap_loop_to_zero_crossings(wav_bytes: bytes, loop_start: int, loop_end: in
 
 def _do_replace(archive_path: str, asset_path: str,
                 audio_path: str, out_dir: str,
-                loop_override: dict | None = None) -> dict:
+                loop_override: dict | None = None,
+                slot_tuning: float | None = None) -> dict:
     sample_rate, channels = _probe_audio(audio_path)
 
     # Use full scan to get loop data and original sample rate.
     info, loop, _book = read_sample_full(archive_path, asset_path)
     unk       = info["unk"]  if info else 0
-    orig_rate = _effective_rate(info) if info else MIXER_RATE_HZ
+    # For ADPCM samples the binary stores no sample_rate, so _effective_rate
+    # falls back to MIXER_RATE_HZ (32000). Use the slot tuning when available:
+    # the engine plays the sample at (tunedSample.tuning * 32000) Hz, so the
+    # WAV must be resampled to that rate so sample->tuning equals the original.
+    if slot_tuning:
+        orig_rate = round(slot_tuning * AUDIO_REF_HZ)
+    else:
+        orig_rate = _effective_rate(info) if info else MIXER_RATE_HZ
 
     # Speed-change to orig_rate: relabels the audio so mSample.tuning = orig_rate/32000.
     if orig_rate and orig_rate != sample_rate and shutil.which("ffmpeg"):
@@ -4417,8 +4425,10 @@ def cmd_gui(args):
                     try:
                         sd = sample_by_path.get(sp)
                         loop_ov = sd.get("loop_data") if sd else None
+                        slots = sd.get("slot_tunings", {}) if sd else {}
+                        slot_t = slots.get("drum") or next(iter(slots.values()), None)
                         _do_replace(self._archive_path, sp, ap, out_dir,
-                                    loop_override=loop_ov)
+                                    loop_override=loop_ov, slot_tuning=slot_t)
                         def _mark_ok(p=sp, a=ap):
                             for iid in self._iids_by_path.get(p, []):
                                 try: self._tree.set(iid, "file", "✓ " + os.path.basename(a))
