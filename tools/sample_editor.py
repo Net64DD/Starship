@@ -355,8 +355,8 @@ def parse_drum_tuning(data: bytes) -> tuple[int, float] | None:
     off += 3  # skip 3 header bytes
     h = struct.unpack_from("<Q", data, off)[0]
     t = struct.unpack_from("<f", data, off + 8)[0]
-    if h != 0 and t != 0.0:
-        return h, t
+    if h != 0:
+        return h, t  # t == 0.0 is valid: means the engine defers to sample->tuning
     return None
 
 
