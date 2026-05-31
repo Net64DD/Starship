@@ -950,7 +950,7 @@ void AudioDebugWindow::DrawElement() {
                         continue;
                     if (sActiveOnly && !r.active)
                         continue;
-                    ImGui::TableNextRow(ImGuiTableRowFlags_None, rowH);
+                    ImGui::TableNextRow();
 
                     // Dim idle rows so active ones stand out.
                     if (!r.active)
@@ -1019,12 +1019,21 @@ void AudioDebugWindow::DrawElement() {
                     ImGui::TableSetColumnIndex(6);
                     if (r.active) {
                         if (r.hasLoop && r.loopEnd > r.loopStart) {
+                            // Looping sample: show position within the loop region (blue).
                             u32 len = r.loopEnd - r.loopStart;
                             s32 posInLoop = r.samplePos - (s32)r.loopStart;
                             float frac = (posInLoop >= 0) ? (float)posInLoop / (float)len : 0.f;
                             frac = frac < 0.f ? 0.f : frac > 1.f ? 1.f : frac;
                             char ov[32]; snprintf(ov, sizeof(ov), "%d", r.samplePos);
                             ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.2f,0.6f,1.f,1.f));
+                            ImGui::ProgressBar(frac, ImVec2(110.f, 0.f), ov);
+                            ImGui::PopStyleColor();
+                        } else if (r.loopEnd > 0) {
+                            // Non-looping sample (e.g. drums): progress over full length (orange).
+                            float frac = (float)r.samplePos / (float)r.loopEnd;
+                            frac = frac < 0.f ? 0.f : frac > 1.f ? 1.f : frac;
+                            char ov[32]; snprintf(ov, sizeof(ov), "%d", r.samplePos);
+                            ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.85f,0.5f,0.1f,1.f));
                             ImGui::ProgressBar(frac, ImVec2(110.f, 0.f), ov);
                             ImGui::PopStyleColor();
                         } else {
