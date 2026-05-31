@@ -21,7 +21,7 @@ extern "C" {
 
 namespace SF64 {
 
-// ── Name tables ──────────────────────────────────────────────────────────────
+// == Name tables ==============================================================
 
 static const char* CodecName(int codec) {
     switch (codec) {
@@ -153,7 +153,7 @@ static const char* AudioSpecName(int id) {
     }
 }
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// == Helpers ==================================================================
 
 static void HelpMarker(const char* desc) {
     ImGui::TextDisabled("(?)");
@@ -180,7 +180,7 @@ static s32 DrawPoolBar(const char* label, const AudioAllocPool& pool) {
     return used;
 }
 
-// ── Module toggle button (coloured by visibility state) ──────────────────────
+// == Module toggle button (coloured by visibility state) ======================
 static void ModuleToggle(const char* label, bool* pVisible) {
     if (*pVisible)
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.5f, 0.2f, 1.f));
@@ -191,7 +191,7 @@ static void ModuleToggle(const char* label, bool* pVisible) {
     ImGui::PopStyleColor();
 }
 
-// ── Main draw ────────────────────────────────────────────────────────────────
+// == Main draw ================================================================
 
 void AudioDebugWindow::DrawElement() {
 
@@ -208,7 +208,7 @@ void AudioDebugWindow::DrawElement() {
     static bool sShow_System       = false;
     static bool sShow_SampleInfo   = false;
 
-    // ── Frame Step (always in main window) ───────────────────────────────────
+    // == Frame Step (always in main window) ===================================
     {
         bool stepping = SF64::gAudioStepMode.load(std::memory_order_acquire);
         uint64_t frameCount = SF64::gAudioFrameCount.load(std::memory_order_relaxed);
@@ -274,7 +274,7 @@ void AudioDebugWindow::DrawElement() {
     }
     ImGui::Separator();
 
-    // ── Module toggle grid ───────────────────────────────────────────────────
+    // == Module toggle grid ===================================================
     ImGui::TextDisabled("Modules:");
     ModuleToggle("PCM Capture",   &sShow_PCMCapture);  ImGui::SameLine();
     ModuleToggle("Chan Mute",     &sShow_ChanMute);    ImGui::SameLine();
@@ -288,7 +288,7 @@ void AudioDebugWindow::DrawElement() {
     ModuleToggle("System",        &sShow_System);      ImGui::SameLine();
     ModuleToggle("Sample Info",   &sShow_SampleInfo);
 
-    // ── PCM Capture ──────────────────────────────────────────────────────────
+    // == PCM Capture ==========================================================
     if (sShow_PCMCapture) {
         ImGui::SetNextWindowSize(ImVec2(450, 175), ImGuiCond_FirstUseEver);
         if (ImGui::Begin("PCM Capture##sf64ad", &sShow_PCMCapture)) {
@@ -362,7 +362,7 @@ void AudioDebugWindow::DrawElement() {
         ImGui::End();
     }
 
-    // ── Channel Mute ─────────────────────────────────────────────────────────
+    // == Channel Mute =========================================================
     if (sShow_ChanMute) {
         ImGui::SetNextWindowSize(ImVec2(460, 130), ImGuiCond_FirstUseEver);
         if (ImGui::Begin("Channel Mute##sf64ad", &sShow_ChanMute)) {
@@ -401,7 +401,7 @@ void AudioDebugWindow::DrawElement() {
         ImGui::End();
     }
 
-    // ── Sequence Players ─────────────────────────────────────────────────────
+    // == Sequence Players =====================================================
     if (sShow_SeqPlayers) {
         static float  sVolScale[SEQ_PLAYER_MAX]   = {1.f, 1.f, 1.f, 1.f};
         static int    sTempoDelta[SEQ_PLAYER_MAX] = {0, 0, 0, 0};
@@ -493,7 +493,7 @@ void AudioDebugWindow::DrawElement() {
         ImGui::End();
     }
 
-    // ── Sequences ────────────────────────────────────────────────────────────
+    // == Sequences ============================================================
     if (sShow_Sequences) {
         static int  sSeqSelPlayer  = 0;
         static int  sSeqSelId      = 2;
@@ -727,7 +727,12 @@ void AudioDebugWindow::DrawElement() {
         ImGui::End();
     }
 
-    // ── Active Notes ─────────────────────────────────────────────────────────
+    // Sample path history — updated by Active Notes, displayed in Sample Info.
+    static std::vector<std::string> sSampleHistory;
+    static std::unordered_set<std::string> sSampleHistorySet;
+    static int  sSampleHistoryLastSeqId = -1;
+
+    // == Active Notes =========================================================
     if (sShow_ActiveNotes) {
         struct NoteRow {
             int         noteIdx    = -1;
@@ -755,11 +760,6 @@ void AudioDebugWindow::DrawElement() {
         static bool  sActiveOnly    = false;
         static float sTableHeightPx = 320.f;
 
-        // Sample path history for the current sequence (BGM player).
-        // Cleared automatically when the BGM sequence ID changes.
-        static std::vector<std::string> sSampleHistory;
-        static std::unordered_set<std::string> sSampleHistorySet;
-        static int  sLastSeqId = -1;
 
         auto capture = [&]() {
             std::vector<NoteRow> rows;
@@ -860,10 +860,10 @@ void AudioDebugWindow::DrawElement() {
         {
             int curSeqId = gSeqPlayers[SEQ_PLAYER_BGM].enabled
                            ? (int)gSeqPlayers[SEQ_PLAYER_BGM].seqId : -1;
-            if (curSeqId != sLastSeqId) {
+            if (curSeqId != sSampleHistoryLastSeqId) {
                 sSampleHistory.clear();
                 sSampleHistorySet.clear();
-                sLastSeqId = curSeqId;
+                sSampleHistoryLastSeqId = curSeqId;
             }
             for (auto& r : sCachedRows) {
                 if (!r.active || r.samplePath.empty() || r.isSynthetic) continue;
@@ -938,14 +938,14 @@ void AudioDebugWindow::DrawElement() {
                 ImGui::TableSetupColumn("Sample",   ImGuiTableColumnFlags_WidthStretch);
                 ImGui::TableSetupColumn("Codec",    ImGuiTableColumnFlags_WidthFixed,  76.f);
                 ImGui::TableSetupColumn("Size",     ImGuiTableColumnFlags_WidthFixed,  64.f);
-                ImGui::TableSetupColumn("SRate",    ImGuiTableColumnFlags_WidthFixed,  72.f);
-                ImGui::TableSetupColumn("ResRate",  ImGuiTableColumnFlags_WidthFixed,  64.f);
                 ImGui::TableSetupColumn("Note",     ImGuiTableColumnFlags_WidthFixed,  48.f);
                 ImGui::TableSetupColumn("Position", ImGuiTableColumnFlags_WidthFixed, 120.f);
                 ImGui::TableSetupColumn("Loop",     ImGuiTableColumnFlags_WidthFixed,  32.f);
                 ImGui::TableSetupColumn("LoopStart",ImGuiTableColumnFlags_WidthFixed,  72.f);
                 ImGui::TableSetupColumn("LoopEnd",  ImGuiTableColumnFlags_WidthFixed,  72.f);
                 ImGui::TableSetupColumn("LoopCount",ImGuiTableColumnFlags_WidthFixed,  64.f);
+                ImGui::TableSetupColumn("SRate",    ImGuiTableColumnFlags_WidthFixed,  72.f);
+                ImGui::TableSetupColumn("ResRate",  ImGuiTableColumnFlags_WidthFixed,  64.f);
                 ImGui::TableHeadersRow();
 
                 for (auto& r : sCachedRows) {
@@ -999,22 +999,8 @@ void AudioDebugWindow::DrawElement() {
                     if (r.active) ImGui::Text("%u B", r.sampleSize);
                     else          ImGui::TextDisabled("-");
 
-                    // SRate: recording rate derived from tunedSample->tuning * 32000
-                    ImGui::TableSetColumnIndex(5);
-                    if (r.active && r.sampleTuning > 0.f)
-                        ImGui::Text("%d Hz", (int)(r.sampleTuning * 32000.f + 0.5f));
-                    else
-                        ImGui::TextDisabled("-");
-
-                    // ResRate: engine resample rate (u16 fixed-point, 32768 = 1.0x)
-                    ImGui::TableSetColumnIndex(6);
-                    if (r.active && r.resampleRate)
-                        ImGui::Text("0x%04X", (unsigned)r.resampleRate);
-                    else
-                        ImGui::TextDisabled("-");
-
                     // Note: for instruments derive MIDI note from freqMod/tuning ratio
-                    ImGui::TableSetColumnIndex(7);
+                    ImGui::TableSetColumnIndex(5);
                     if (r.active && !r.isSynthetic && !r.isDrum &&
                         r.sampleTuning > 0.f && r.freqMod > 0.f) {
                         static const char* kNoteNames[] = {
@@ -1033,7 +1019,7 @@ void AudioDebugWindow::DrawElement() {
                         ImGui::TextDisabled("-");
                     }
 
-                    ImGui::TableSetColumnIndex(8);
+                    ImGui::TableSetColumnIndex(6);
                     if (r.active) {
                         if (r.hasLoop && r.loopEnd > r.loopStart) {
                             u32 len = r.loopEnd - r.loopStart;
@@ -1051,7 +1037,7 @@ void AudioDebugWindow::DrawElement() {
                         ImGui::TextDisabled("-");
                     }
 
-                    ImGui::TableSetColumnIndex(9);
+                    ImGui::TableSetColumnIndex(7);
                     if (r.active)
                         ImGui::TextColored(r.hasLoop ? ImVec4(0.4f,1.f,0.4f,1.f)
                                                      : ImVec4(0.5f,0.5f,0.5f,1.f),
@@ -1059,13 +1045,13 @@ void AudioDebugWindow::DrawElement() {
                     else
                         ImGui::TextDisabled("-");
 
-                    ImGui::TableSetColumnIndex(10);
+                    ImGui::TableSetColumnIndex(8);
                     if (r.active && r.hasLoop) ImGui::Text("%u", r.loopStart); else ImGui::TextDisabled("-");
 
-                    ImGui::TableSetColumnIndex(11);
+                    ImGui::TableSetColumnIndex(9);
                     if (r.active && r.hasLoop) ImGui::Text("%u", r.loopEnd); else ImGui::TextDisabled("-");
 
-                    ImGui::TableSetColumnIndex(12);
+                    ImGui::TableSetColumnIndex(10);
                     if (r.active && r.hasLoop) {
                         if (r.loopCount == 0xFFFFFFFF)
                             ImGui::TextColored(ImVec4(0.4f,0.8f,1.f,1.f), "inf");
@@ -1075,13 +1061,27 @@ void AudioDebugWindow::DrawElement() {
                         ImGui::TextDisabled("-");
                     }
 
+                    // SRate: recording rate derived from tunedSample->tuning * 32000
+                    ImGui::TableSetColumnIndex(11);
+                    if (r.active && r.sampleTuning > 0.f)
+                        ImGui::Text("%d Hz", (int)(r.sampleTuning * 32000.f + 0.5f));
+                    else
+                        ImGui::TextDisabled("-");
+
+                    // ResRate: engine resample rate in Hz (32768 = 32000 Hz baseline)
+                    ImGui::TableSetColumnIndex(12);
+                    if (r.active && r.resampleRate)
+                        ImGui::Text("%d Hz", (int)((float)r.resampleRate / 32768.f * 32000.f + 0.5f));
+                    else
+                        ImGui::TextDisabled("-");
+
                     if (!r.active)
                         ImGui::PopStyleColor();
                 }
                 ImGui::EndTable();
             }
 
-            // ── Resize handle ─────────────────────────────────────────────────
+            // == Resize handle =================================================
             {
                 ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.f, 0.f));
                 ImGui::InvisibleButton("##tblresize", ImVec2(-1.f, 6.f));
@@ -1110,45 +1110,11 @@ void AudioDebugWindow::DrawElement() {
                     dl->AddCircleFilled(ImVec2(cx + d * 6.f, cy), 1.5f, col);
             }
 
-            // ── Sample history ────────────────────────────────────────────────
-            ImGui::Spacing();
-            {
-                char hdr[64];
-                int  curSeqId = gSeqPlayers[SEQ_PLAYER_BGM].enabled
-                                ? (int)gSeqPlayers[SEQ_PLAYER_BGM].seqId : -1;
-                if (curSeqId >= 0)
-                    snprintf(hdr, sizeof(hdr), "Sample History — seq %d (%zu paths)###smhist",
-                             curSeqId, sSampleHistory.size());
-                else
-                    snprintf(hdr, sizeof(hdr), "Sample History — (no sequence)###smhist");
-
-                if (ImGui::CollapsingHeader(hdr)) {
-                    if (ImGui::Button("Clear##smhist")) {
-                        sSampleHistory.clear();
-                        sSampleHistorySet.clear();
-                    }
-                    ImGui::SameLine();
-                    ImGui::TextDisabled("%zu unique sample(s)", sSampleHistory.size());
-
-                    ImGui::BeginChild("##smhistlist", ImVec2(0.f, 120.f), true);
-                    for (int i = (int)sSampleHistory.size() - 1; i >= 0; i--) {
-                        const char* path = sSampleHistory[i].c_str();
-                        const char* slash = strrchr(path, '/');
-                        ImGui::TextUnformatted(slash ? slash + 1 : path);
-                        if (ImGui::IsItemHovered()) {
-                            ImGui::BeginTooltip();
-                            ImGui::TextUnformatted(path);
-                            ImGui::EndTooltip();
-                        }
-                    }
-                    ImGui::EndChild();
-                }
-            }
         }
         ImGui::End();
     }
 
-    // ── Channel Stats ────────────────────────────────────────────────────────
+    // == Channel Stats ========================================================
     if (sShow_ChanStats) {
         ImGui::SetNextWindowSize(ImVec2(560, 400), ImGuiCond_FirstUseEver);
         if (ImGui::Begin("Channel Stats##sf64ad", &sShow_ChanStats)) {
@@ -1227,7 +1193,7 @@ void AudioDebugWindow::DrawElement() {
         ImGui::End();
     }
 
-    // ── Polyphony ────────────────────────────────────────────────────────────
+    // == Polyphony ============================================================
     if (sShow_Polyphony) {
         ImGui::SetNextWindowSize(ImVec2(380, 160), ImGuiCond_FirstUseEver);
         if (ImGui::Begin("Polyphony##sf64ad", &sShow_Polyphony)) {
@@ -1280,7 +1246,7 @@ void AudioDebugWindow::DrawElement() {
         ImGui::End();
     }
 
-    // ── Reverb ───────────────────────────────────────────────────────────────
+    // == Reverb ===============================================================
     if (sShow_Reverb) {
         ImGui::SetNextWindowSize(ImVec2(340, 240), ImGuiCond_FirstUseEver);
         if (ImGui::Begin("Reverb##sf64ad", &sShow_Reverb)) {
@@ -1312,7 +1278,7 @@ void AudioDebugWindow::DrawElement() {
         ImGui::End();
     }
 
-    // ── Audio Heap ───────────────────────────────────────────────────────────
+    // == Audio Heap ===========================================================
     if (sShow_AudioHeap) {
         ImGui::SetNextWindowSize(ImVec2(420, 300), ImGuiCond_FirstUseEver);
         if (ImGui::Begin("Audio Heap##sf64ad", &sShow_AudioHeap)) {
@@ -1344,7 +1310,7 @@ void AudioDebugWindow::DrawElement() {
         ImGui::End();
     }
 
-    // ── System ───────────────────────────────────────────────────────────────
+    // == System ===============================================================
     if (sShow_System) {
         ImGui::SetNextWindowSize(ImVec2(420, 320), ImGuiCond_FirstUseEver);
         if (ImGui::Begin("System##sf64ad", &sShow_System)) {
@@ -1378,7 +1344,7 @@ void AudioDebugWindow::DrawElement() {
         ImGui::End();
     }
 
-    // ── Sample Info (Current Sample + Loop Info + Registered Samples) ────────
+    // == Sample Info (Current Sample + Loop Info + Registered Samples) ========
     if (sShow_SampleInfo) {
         ImGui::SetNextWindowSize(ImVec2(500, 560), ImGuiCond_FirstUseEver);
         if (ImGui::Begin("Sample Info##sf64ad", &sShow_SampleInfo)) {
@@ -1489,6 +1455,39 @@ void AudioDebugWindow::DrawElement() {
                             ImGui::Text("%p", static_cast<void*>(ptr));
                         }
                         ImGui::EndTable();
+                    }
+                }
+
+                {
+                    char hdr[64];
+                    int curSeqId = gSeqPlayers[SEQ_PLAYER_BGM].enabled
+                                   ? (int)gSeqPlayers[SEQ_PLAYER_BGM].seqId : -1;
+                    if (curSeqId >= 0)
+                        snprintf(hdr, sizeof(hdr), "Sample History — seq %d (%zu paths)###smhist",
+                                 curSeqId, sSampleHistory.size());
+                    else
+                        snprintf(hdr, sizeof(hdr), "Sample History — (no sequence)###smhist");
+
+                    if (ImGui::CollapsingHeader(hdr)) {
+                        if (ImGui::Button("Clear##smhist")) {
+                            sSampleHistory.clear();
+                            sSampleHistorySet.clear();
+                        }
+                        ImGui::SameLine();
+                        ImGui::TextDisabled("%zu unique sample(s)", sSampleHistory.size());
+
+                        ImGui::BeginChild("##smhistlist", ImVec2(0.f, 120.f), true);
+                        for (int i = (int)sSampleHistory.size() - 1; i >= 0; i--) {
+                            const char* path = sSampleHistory[i].c_str();
+                            const char* slash = strrchr(path, '/');
+                            ImGui::TextUnformatted(slash ? slash + 1 : path);
+                            if (ImGui::IsItemHovered()) {
+                                ImGui::BeginTooltip();
+                                ImGui::TextUnformatted(path);
+                                ImGui::EndTooltip();
+                            }
+                        }
+                        ImGui::EndChild();
                     }
                 }
             }
