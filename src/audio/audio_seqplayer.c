@@ -1518,8 +1518,16 @@ void AudioSeq_SequencePlayerProcessSequence(SequencePlayer* seqPlayer) {
         }
     }
     for (i = 0; i < SEQ_NUM_CHANNELS; i++) {
-        if (AudioDebug_IsChannelMuted(i)) continue;
-        if (IS_SEQUENCE_CHANNEL_VALID(seqPlayer->channels[i]) == 1) {
+        if (IS_SEQUENCE_CHANNEL_VALID(seqPlayer->channels[i]) != 1) {
+            continue;
+        }
+        if (AudioDebug_IsChannelMuted(i)) {
+            SequenceChannel* ch = seqPlayer->channels[i];
+            f32 savedVol = ch->volume;
+            ch->volume = 0.0f;
+            AudioSeq_SequenceChannelProcessScript(ch);
+            ch->volume = savedVol;
+        } else {
             AudioSeq_SequenceChannelProcessScript(seqPlayer->channels[i]);
         }
     }
