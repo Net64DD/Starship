@@ -2725,7 +2725,8 @@ void Audio_PlaySoundTestTrack(u8 trackNumber) {
         bgmParam = sSoundTestTracks[trackNumber].bgmParam;
         SEQCMD_STOP_SEQUENCE(D_800C5E70 ^ 1, 5);
         Audio_PlaySequence(D_800C5E70, seqId, 0, bgmParam);
-        D_800C5E70 ^= 1;
+        // @port: Don't cycle between players when playing a song after another
+        // D_800C5E70 ^= 1;
     }
 }
 
