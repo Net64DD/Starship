@@ -922,6 +922,7 @@ void AudioDebugWindow::DrawElement() {
             ImGui::Checkbox("Active Only", &sActiveOnly);
             ImGui::Separator();
 
+            const float rowH = ImGui::GetFrameHeight() + ImGui::GetStyle().CellPadding.y * 2.0f;
 
             if (ImGui::BeginTable("##notes", 13,
                     ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg |
@@ -950,7 +951,7 @@ void AudioDebugWindow::DrawElement() {
                         continue;
                     if (sActiveOnly && !r.active)
                         continue;
-                    ImGui::TableNextRow();
+                    ImGui::TableNextRow(ImGuiTableRowFlags_None, rowH);
 
                     // Dim idle rows so active ones stand out.
                     if (!r.active)
