@@ -937,15 +937,15 @@ void AudioDebugWindow::DrawElement() {
                 ImGui::TableSetupColumn("Pl/Ch",     ImGuiTableColumnFlags_WidthFixed,  42.f);
                 ImGui::TableSetupColumn("Sample",    ImGuiTableColumnFlags_WidthStretch);
                 ImGui::TableSetupColumn("Codec",     ImGuiTableColumnFlags_WidthFixed,  76.f);
-                ImGui::TableSetupColumn("SRate",     ImGuiTableColumnFlags_WidthFixed,  72.f);
-                ImGui::TableSetupColumn("ResRate",   ImGuiTableColumnFlags_WidthFixed,  64.f);
-                ImGui::TableSetupColumn("Note",      ImGuiTableColumnFlags_WidthFixed,  48.f);
                 ImGui::TableSetupColumn("Size",      ImGuiTableColumnFlags_WidthFixed,  64.f);
                 ImGui::TableSetupColumn("Position",  ImGuiTableColumnFlags_WidthFixed, 120.f);
                 ImGui::TableSetupColumn("Loop",      ImGuiTableColumnFlags_WidthFixed,  32.f);
                 ImGui::TableSetupColumn("LoopStart", ImGuiTableColumnFlags_WidthFixed,  72.f);
                 ImGui::TableSetupColumn("LoopEnd",   ImGuiTableColumnFlags_WidthFixed,  72.f);
                 ImGui::TableSetupColumn("LoopCount", ImGuiTableColumnFlags_WidthFixed,  64.f);
+                ImGui::TableSetupColumn("SRate",     ImGuiTableColumnFlags_WidthFixed,  72.f);
+                ImGui::TableSetupColumn("ResRate",   ImGuiTableColumnFlags_WidthFixed,  64.f);
+                ImGui::TableSetupColumn("Note",      ImGuiTableColumnFlags_WidthFixed,  48.f);
                 ImGui::TableHeadersRow();
 
                 for (auto& r : sCachedRows) {
