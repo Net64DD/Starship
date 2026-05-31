@@ -3540,16 +3540,19 @@ def cmd_gui(args):
             detail_outer.rowconfigure(0, weight=1)
             detail_outer.columnconfigure(0, weight=1)
 
-            detail_canvas = tk.Canvas(detail_outer, highlightthickness=0, bd=0)
+            _panel_bg = ttk.Style().lookup("TFrame", "background")
+            detail_canvas = tk.Canvas(detail_outer, highlightthickness=0, bd=0,
+                                      background=_panel_bg)
             detail_vsb = ttk.Scrollbar(detail_outer, orient="vertical",
                                        command=detail_canvas.yview)
             detail_canvas.configure(yscrollcommand=detail_vsb.set)
             detail_canvas.grid(row=0, column=0, sticky="nsew")
             detail_vsb.grid(row=0, column=1, sticky="ns")
 
-            detail = ttk.Frame(detail_canvas)
+            detail = ttk.Frame(detail_canvas, style="TFrame")
             detail.columnconfigure(1, weight=1)
-            _detail_win = detail_canvas.create_window((0, 0), window=detail, anchor="nw")
+            _detail_win = detail_canvas.create_window((0, 0), window=detail, anchor="nw",
+                                                      tags="detail_frame")
 
             def _detail_on_frame_configure(_event):
                 detail_canvas.configure(scrollregion=detail_canvas.bbox("all"))
@@ -3840,7 +3843,7 @@ def cmd_gui(args):
 
                 for inst_path in sorted(font_inst[font_path]):
                     inst_iid = f"inst:{font_path}:{inst_path}"
-                    self._tree.insert(font_iid, "end", iid=inst_iid, open=False,
+                    self._tree.insert(font_iid, "end", iid=inst_iid, open=True,
                         text=_path_tail(inst_path))
                     self._node_map[inst_iid] = {"leaf": False}
 
