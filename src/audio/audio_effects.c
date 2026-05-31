@@ -1,6 +1,7 @@
 #include "sys.h"
 #include "sf64audio_provisional.h"
 #include "endianness.h"
+#include "port/audio/AudioDebug.h"
 
 static const char devstr[] = "Audio:Envp: overflow  %f\n";
 
@@ -67,6 +68,15 @@ void Audio_SequencePlayerProcessSound(SequencePlayer* seqplayer) {
     for (i = 0; i < SEQ_NUM_CHANNELS; i++) {
         if ((IS_SEQUENCE_CHANNEL_VALID(seqplayer->channels[i]) == 1) && (seqplayer->channels[i]->enabled == 1)) {
             Audio_SequenceChannelProcessSound(seqplayer->channels[i], seqplayer->recalculateVolume);
+            if (AudioDebug_IsChannelMuted(i)) {
+                s32 li;
+                SequenceChannel* ch = seqplayer->channels[i];
+                for (li = 0; li < ARRAY_COUNT(ch->layers); li++) {
+                    if (ch->layers[li] != NULL && ch->layers[li]->note != NULL) {
+                        ch->layers[li]->noteVelocity = 0.0f;
+                    }
+                }
+            }
         }
     }
     seqplayer->recalculateVolume = false;
