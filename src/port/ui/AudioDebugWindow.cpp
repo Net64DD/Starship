@@ -934,18 +934,18 @@ void AudioDebugWindow::DrawElement() {
 
                 ImGui::TableSetupScrollFreeze(0, 1);
                 ImGui::TableSetupColumn("##dot",    ImGuiTableColumnFlags_WidthFixed,  12.f);
-                ImGui::TableSetupColumn("Pl/Ch",     ImGuiTableColumnFlags_WidthFixed,  42.f);
-                ImGui::TableSetupColumn("Sample",    ImGuiTableColumnFlags_WidthStretch);
-                ImGui::TableSetupColumn("Codec",     ImGuiTableColumnFlags_WidthFixed,  76.f);
-                ImGui::TableSetupColumn("Size",      ImGuiTableColumnFlags_WidthFixed,  64.f);
-                ImGui::TableSetupColumn("Position",  ImGuiTableColumnFlags_WidthFixed, 120.f);
-                ImGui::TableSetupColumn("Loop",      ImGuiTableColumnFlags_WidthFixed,  32.f);
-                ImGui::TableSetupColumn("LoopStart", ImGuiTableColumnFlags_WidthFixed,  72.f);
-                ImGui::TableSetupColumn("LoopEnd",   ImGuiTableColumnFlags_WidthFixed,  72.f);
-                ImGui::TableSetupColumn("LoopCount", ImGuiTableColumnFlags_WidthFixed,  64.f);
-                ImGui::TableSetupColumn("SRate",     ImGuiTableColumnFlags_WidthFixed,  72.f);
-                ImGui::TableSetupColumn("ResRate",   ImGuiTableColumnFlags_WidthFixed,  64.f);
-                ImGui::TableSetupColumn("Note",      ImGuiTableColumnFlags_WidthFixed,  48.f);
+                ImGui::TableSetupColumn("Pl/Ch",    ImGuiTableColumnFlags_WidthFixed,  42.f);
+                ImGui::TableSetupColumn("Sample",   ImGuiTableColumnFlags_WidthStretch);
+                ImGui::TableSetupColumn("Codec",    ImGuiTableColumnFlags_WidthFixed,  76.f);
+                ImGui::TableSetupColumn("Size",     ImGuiTableColumnFlags_WidthFixed,  64.f);
+                ImGui::TableSetupColumn("SRate",    ImGuiTableColumnFlags_WidthFixed,  72.f);
+                ImGui::TableSetupColumn("ResRate",  ImGuiTableColumnFlags_WidthFixed,  64.f);
+                ImGui::TableSetupColumn("Note",     ImGuiTableColumnFlags_WidthFixed,  48.f);
+                ImGui::TableSetupColumn("Position", ImGuiTableColumnFlags_WidthFixed, 120.f);
+                ImGui::TableSetupColumn("Loop",     ImGuiTableColumnFlags_WidthFixed,  32.f);
+                ImGui::TableSetupColumn("LoopStart",ImGuiTableColumnFlags_WidthFixed,  72.f);
+                ImGui::TableSetupColumn("LoopEnd",  ImGuiTableColumnFlags_WidthFixed,  72.f);
+                ImGui::TableSetupColumn("LoopCount",ImGuiTableColumnFlags_WidthFixed,  64.f);
                 ImGui::TableHeadersRow();
 
                 for (auto& r : sCachedRows) {
@@ -999,7 +999,41 @@ void AudioDebugWindow::DrawElement() {
                     if (r.active) ImGui::Text("%u B", r.sampleSize);
                     else          ImGui::TextDisabled("-");
 
+                    // SRate: recording rate derived from tunedSample->tuning * 32000
                     ImGui::TableSetColumnIndex(5);
+                    if (r.active && r.sampleTuning > 0.f)
+                        ImGui::Text("%d Hz", (int)(r.sampleTuning * 32000.f + 0.5f));
+                    else
+                        ImGui::TextDisabled("-");
+
+                    // ResRate: engine resample rate (u16 fixed-point, 32768 = 1.0x)
+                    ImGui::TableSetColumnIndex(6);
+                    if (r.active && r.resampleRate)
+                        ImGui::Text("0x%04X", (unsigned)r.resampleRate);
+                    else
+                        ImGui::TextDisabled("-");
+
+                    // Note: for instruments derive MIDI note from freqMod/tuning ratio
+                    ImGui::TableSetColumnIndex(7);
+                    if (r.active && !r.isSynthetic && !r.isDrum &&
+                        r.sampleTuning > 0.f && r.freqMod > 0.f) {
+                        static const char* kNoteNames[] = {
+                            "C","C#","D","D#","E","F","F#","G","G#","A","A#","B"
+                        };
+                        float ratio = r.freqMod / r.sampleTuning;
+                        int   semi  = (int)roundf(12.f * log2f(ratio));
+                        int   midi  = 60 + semi;
+                        if (midi >= 0 && midi <= 127) {
+                            int octave = midi / 12 - 1;
+                            ImGui::Text("%s%d", kNoteNames[midi % 12], octave);
+                        } else {
+                            ImGui::TextDisabled("?");
+                        }
+                    } else {
+                        ImGui::TextDisabled("-");
+                    }
+
+                    ImGui::TableSetColumnIndex(8);
                     if (r.active) {
                         if (r.hasLoop && r.loopEnd > r.loopStart) {
                             u32 len = r.loopEnd - r.loopStart;
@@ -1017,7 +1051,7 @@ void AudioDebugWindow::DrawElement() {
                         ImGui::TextDisabled("-");
                     }
 
-                    ImGui::TableSetColumnIndex(6);
+                    ImGui::TableSetColumnIndex(9);
                     if (r.active)
                         ImGui::TextColored(r.hasLoop ? ImVec4(0.4f,1.f,0.4f,1.f)
                                                      : ImVec4(0.5f,0.5f,0.5f,1.f),
@@ -1025,52 +1059,18 @@ void AudioDebugWindow::DrawElement() {
                     else
                         ImGui::TextDisabled("-");
 
-                    ImGui::TableSetColumnIndex(7);
+                    ImGui::TableSetColumnIndex(10);
                     if (r.active && r.hasLoop) ImGui::Text("%u", r.loopStart); else ImGui::TextDisabled("-");
 
-                    ImGui::TableSetColumnIndex(8);
+                    ImGui::TableSetColumnIndex(11);
                     if (r.active && r.hasLoop) ImGui::Text("%u", r.loopEnd); else ImGui::TextDisabled("-");
 
-                    ImGui::TableSetColumnIndex(9);
+                    ImGui::TableSetColumnIndex(12);
                     if (r.active && r.hasLoop) {
                         if (r.loopCount == 0xFFFFFFFF)
                             ImGui::TextColored(ImVec4(0.4f,0.8f,1.f,1.f), "inf");
                         else
                             ImGui::Text("%u", r.loopCount);
-                    } else {
-                        ImGui::TextDisabled("-");
-                    }
-
-                    // SRate: recording rate derived from tunedSample->tuning * 32000
-                    ImGui::TableSetColumnIndex(10);
-                    if (r.active && r.sampleTuning > 0.f)
-                        ImGui::Text("%d Hz", (int)(r.sampleTuning * 32000.f + 0.5f));
-                    else
-                        ImGui::TextDisabled("-");
-
-                    // ResRate: engine resample rate (u16 fixed-point, 32768 = 1.0x)
-                    ImGui::TableSetColumnIndex(11);
-                    if (r.active && r.resampleRate)
-                        ImGui::Text("0x%04X", (unsigned)r.resampleRate);
-                    else
-                        ImGui::TextDisabled("-");
-
-                    // Note: for instruments derive MIDI note from freqMod/tuning ratio
-                    ImGui::TableSetColumnIndex(12);
-                    if (r.active && !r.isSynthetic && !r.isDrum &&
-                        r.sampleTuning > 0.f && r.freqMod > 0.f) {
-                        static const char* kNoteNames[] = {
-                            "C","C#","D","D#","E","F","F#","G","G#","A","A#","B"
-                        };
-                        float ratio = r.freqMod / r.sampleTuning;
-                        int   semi  = (int)roundf(12.f * log2f(ratio));
-                        int   midi  = 60 + semi;
-                        if (midi >= 0 && midi <= 127) {
-                            int octave = midi / 12 - 1;
-                            ImGui::Text("%s%d", kNoteNames[midi % 12], octave);
-                        } else {
-                            ImGui::TextDisabled("?");
-                        }
                     } else {
                         ImGui::TextDisabled("-");
                     }
