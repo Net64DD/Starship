@@ -749,7 +749,7 @@ void AudioDebugWindow::DrawElement() {
 
         static std::vector<NoteRow> sCachedRows;
         static bool   sFreeze         = false;
-        static float  sRefreshHz      = 4.f;
+        static float  sRefreshHz      = 30.f;
         static double sLastRefreshTime = 0.0;
         static bool   sShowPlayer[SEQ_PLAYER_MAX] = { true, true, true, true };
         static bool  sActiveOnly    = false;
