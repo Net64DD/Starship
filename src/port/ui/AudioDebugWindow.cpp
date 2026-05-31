@@ -736,6 +736,9 @@ void AudioDebugWindow::DrawElement() {
             s32         samplePos  = 0;
             u32         loopStart = 0, loopEnd = 0, loopCount = 0;
             u16         resampleRate = 0;
+            float       sampleTuning = 0.0f; // tunedSample->tuning; recording Hz ≈ tuning * 32000
+            float       freqMod      = 0.0f; // layer->freqMod (pitch-adjusted; instruments = pitchFreq * tuning)
+            bool        isDrum       = false;
             int         codec      = 0;
             u32         sampleSize = 0;
             bool        active     = false;
@@ -800,6 +803,10 @@ void AudioDebugWindow::DrawElement() {
                             r.samplePos    = n.synthesisState.samplePosInt;
                             r.resampleRate = n.noteSubEu.resampleRate;
                             r.isSynthetic  = (bool)n.noteSubEu.bitField1.isSyntheticWave;
+                            r.isDrum       = IS_SEQUENCE_CHANNEL_VALID(ch) && ch->instOrWave == 0;
+                            r.freqMod      = layer->freqMod;
+                            if (layer->tunedSample)
+                                r.sampleTuning = layer->tunedSample->tuning;
 
                             if (!r.isSynthetic) {
                                 ::Sample* const* addrPtr = n.noteSubEu.waveSampleAddr;
@@ -919,7 +926,7 @@ void AudioDebugWindow::DrawElement() {
             const float rowH   = ImGui::GetFrameHeight() + ImGui::GetStyle().CellPadding.y * 2.0f;
             const float minH   = rowH * 3.f;
 
-            if (ImGui::BeginTable("##notes", 10,
+            if (ImGui::BeginTable("##notes", 13,
                     ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg |
                     ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingFixedFit |
                     ImGuiTableFlags_ScrollX | ImGuiTableFlags_Resizable,
@@ -930,6 +937,9 @@ void AudioDebugWindow::DrawElement() {
                 ImGui::TableSetupColumn("Pl/Ch",     ImGuiTableColumnFlags_WidthFixed,  42.f);
                 ImGui::TableSetupColumn("Sample",    ImGuiTableColumnFlags_WidthStretch);
                 ImGui::TableSetupColumn("Codec",     ImGuiTableColumnFlags_WidthFixed,  76.f);
+                ImGui::TableSetupColumn("SRate",     ImGuiTableColumnFlags_WidthFixed,  72.f);
+                ImGui::TableSetupColumn("ResRate",   ImGuiTableColumnFlags_WidthFixed,  64.f);
+                ImGui::TableSetupColumn("Note",      ImGuiTableColumnFlags_WidthFixed,  48.f);
                 ImGui::TableSetupColumn("Size",      ImGuiTableColumnFlags_WidthFixed,  64.f);
                 ImGui::TableSetupColumn("Position",  ImGuiTableColumnFlags_WidthFixed, 120.f);
                 ImGui::TableSetupColumn("Loop",      ImGuiTableColumnFlags_WidthFixed,  32.f);
@@ -1027,6 +1037,40 @@ void AudioDebugWindow::DrawElement() {
                             ImGui::TextColored(ImVec4(0.4f,0.8f,1.f,1.f), "inf");
                         else
                             ImGui::Text("%u", r.loopCount);
+                    } else {
+                        ImGui::TextDisabled("-");
+                    }
+
+                    // SRate: recording rate derived from tunedSample->tuning * 32000
+                    ImGui::TableSetColumnIndex(10);
+                    if (r.active && r.sampleTuning > 0.f)
+                        ImGui::Text("%d Hz", (int)(r.sampleTuning * 32000.f + 0.5f));
+                    else
+                        ImGui::TextDisabled("-");
+
+                    // ResRate: engine resample rate (u16 fixed-point, 32768 = 1.0x)
+                    ImGui::TableSetColumnIndex(11);
+                    if (r.active && r.resampleRate)
+                        ImGui::Text("0x%04X", (unsigned)r.resampleRate);
+                    else
+                        ImGui::TextDisabled("-");
+
+                    // Note: for instruments derive MIDI note from freqMod/tuning ratio
+                    ImGui::TableSetColumnIndex(12);
+                    if (r.active && !r.isSynthetic && !r.isDrum &&
+                        r.sampleTuning > 0.f && r.freqMod > 0.f) {
+                        static const char* kNoteNames[] = {
+                            "C","C#","D","D#","E","F","F#","G","G#","A","A#","B"
+                        };
+                        float ratio = r.freqMod / r.sampleTuning;
+                        int   semi  = (int)roundf(12.f * log2f(ratio));
+                        int   midi  = 60 + semi;
+                        if (midi >= 0 && midi <= 127) {
+                            int octave = midi / 12 - 1;
+                            ImGui::Text("%s%d", kNoteNames[midi % 12], octave);
+                        } else {
+                            ImGui::TextDisabled("?");
+                        }
                     } else {
                         ImGui::TextDisabled("-");
                     }

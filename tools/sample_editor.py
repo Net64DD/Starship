@@ -3345,6 +3345,7 @@ def cmd_gui(args):
             self._node_map:            dict[str, dict] = {}  # iid → {sample, slot, tuning, leaf}
             self._iids_by_path:        dict[str, list[str]] = {}  # path → [leaf iids]
             self._project_path:        str             = ""
+            self._last_dir:            str             = ""
 
             self._build_styles()
             self._build_ui()
@@ -3533,16 +3534,73 @@ def cmd_gui(args):
             self._tree.bind("<Button-2>",         self._on_heading_menu)
             self._tree.bind("<Button-3>",         self._on_heading_menu)
 
-            # detail panel
-            detail = ttk.Frame(pane, padding=(10, 0, 0, 0))
-            detail.grid(row=0, column=1, sticky="nsew")
-            detail.columnconfigure(1, weight=1)
+            # detail panel — scrollable
+            detail_outer = ttk.Frame(pane, padding=(10, 0, 0, 0))
+            detail_outer.grid(row=0, column=1, sticky="nsew")
+            detail_outer.rowconfigure(0, weight=1)
+            detail_outer.columnconfigure(0, weight=1)
 
+            detail_canvas = tk.Canvas(detail_outer, highlightthickness=0, bd=0)
+            detail_vsb = ttk.Scrollbar(detail_outer, orient="vertical",
+                                       command=detail_canvas.yview)
+            detail_canvas.configure(yscrollcommand=detail_vsb.set)
+            detail_canvas.grid(row=0, column=0, sticky="nsew")
+            detail_vsb.grid(row=0, column=1, sticky="ns")
+
+            detail = ttk.Frame(detail_canvas)
+            detail.columnconfigure(1, weight=1)
+            _detail_win = detail_canvas.create_window((0, 0), window=detail, anchor="nw")
+
+            def _detail_on_frame_configure(_event):
+                detail_canvas.configure(scrollregion=detail_canvas.bbox("all"))
+            def _detail_on_canvas_configure(event):
+                detail_canvas.itemconfig(_detail_win, width=event.width)
+            def _detail_on_scroll(event):
+                detail_canvas.yview_scroll(-1 * (event.delta // 120), "units")
+            detail.bind("<Configure>", _detail_on_frame_configure)
+            detail_canvas.bind("<Configure>", _detail_on_canvas_configure)
+            detail_canvas.bind("<MouseWheel>", _detail_on_scroll)
+            detail.bind("<MouseWheel>", _detail_on_scroll)
+
+            # ── buttons at top ────────────────────────────────────────────────
             ttk.Label(detail, text="Sample Details",
                       foreground=ACCENT,
                       font=(*FONT[:1], FONT[1]+1, "bold")).grid(
-                row=0, column=0, columnspan=2, sticky="w", pady=(0, 8))
+                row=0, column=0, columnspan=2, sticky="w", pady=(0, 4))
 
+            self._btn_play = ttk.Button(detail, text="▶  Play",
+                                        command=self._action_play)
+            self._btn_play.grid(row=1, column=0, columnspan=2, sticky="ew", pady=2)
+
+            self._btn_loop_editor = ttk.Button(detail, text="◈  Loop Editor…",
+                                               command=self._action_loop_editor)
+            self._btn_loop_editor.grid(row=2, column=0, columnspan=2, sticky="ew", pady=2)
+
+            self._btn_export = ttk.Button(detail, text="↓  Export",
+                                          command=self._action_export)
+            self._btn_export.grid(row=3, column=0, columnspan=2, sticky="ew", pady=2)
+
+            self._btn_assign = ttk.Button(detail, text="↔  Assign Audio…",
+                                          command=self._assign_audio)
+            self._btn_assign.grid(row=4, column=0, columnspan=2, sticky="ew", pady=2)
+
+            self._btn_clear = ttk.Button(detail, text="✕  Clear Assigned Audio",
+                                         command=self._clear_audio)
+            self._btn_clear.grid(row=5, column=0, columnspan=2, sticky="ew", pady=2)
+
+            self._btn_export_aliases = ttk.Button(detail, text="⬆  Export Aliases…",
+                                                   command=self._action_export_aliases)
+            self._btn_export_aliases.grid(row=6, column=0, columnspan=2,
+                                          sticky="ew", pady=(2, 8))
+
+            for btn in (self._btn_play, self._btn_loop_editor, self._btn_export,
+                        self._btn_assign, self._btn_clear, self._btn_export_aliases):
+                btn.state(["disabled"])
+
+            ttk.Frame(detail, height=1).grid(row=7, column=0, columnspan=2,
+                                             sticky="ew", pady=(0, 6))
+
+            # ── detail labels below buttons ───────────────────────────────────
             self._detail_labels: dict[str, tk.StringVar] = {}
             detail_rows = [
                 ("Path",      "path"),
@@ -3559,7 +3617,8 @@ def cmd_gui(args):
                 ("Loop",      "loop"),
                 ("Book",      "book"),
             ]
-            for i, (label, key) in enumerate(detail_rows, start=1):
+            label_start = 8
+            for i, (label, key) in enumerate(detail_rows, start=label_start):
                 ttk.Label(detail, text=label, foreground=FG_DIM,
                           font=FONT_SML).grid(row=i, column=0, sticky="nw",
                                               padx=(0, 8), pady=2)
@@ -3570,7 +3629,7 @@ def cmd_gui(args):
                           justify="left").grid(row=i, column=1, sticky="nw", pady=2)
 
             # Alias — editable entry, auto-saved on Return / focus change
-            alias_row = len(detail_rows) + 1
+            alias_row = label_start + len(detail_rows)
             ttk.Label(detail, text="Alias", foreground=FG_DIM,
                       font=FONT_SML).grid(row=alias_row, column=0, sticky="nw",
                                           padx=(0, 8), pady=(8, 2))
@@ -3582,47 +3641,34 @@ def cmd_gui(args):
             self._alias_entry.bind("<FocusOut>", lambda *_: self._save_alias())
             self._alias_entry.state(["disabled"])
 
-            btn_row = len(detail_rows) + 4
-            ttk.Frame(detail, height=1).grid(row=btn_row - 1, column=0, columnspan=2,
-                                             sticky="ew", pady=(10, 8))
+        # ── file-dialog helpers (remember last directory) ─────────────────────
+        def _fd_open(self, **kw) -> str:
+            if self._last_dir and "initialdir" not in kw:
+                kw["initialdir"] = self._last_dir
+            result = filedialog.askopenfilename(**kw)
+            if result:
+                self._last_dir = os.path.dirname(result)
+            return result or ""
 
-            self._btn_play = ttk.Button(detail, text="▶  Play",
-                                        command=self._action_play)
-            self._btn_play.grid(row=btn_row, column=0, columnspan=2,
-                                sticky="ew", pady=2)
+        def _fd_save(self, **kw) -> str:
+            if self._last_dir and "initialdir" not in kw:
+                kw["initialdir"] = self._last_dir
+            result = filedialog.asksaveasfilename(**kw)
+            if result:
+                self._last_dir = os.path.dirname(result)
+            return result or ""
 
-            self._btn_loop_editor = ttk.Button(detail, text="◈  Loop Editor…",
-                                               command=self._action_loop_editor)
-            self._btn_loop_editor.grid(row=btn_row+1, column=0, columnspan=2,
-                                       sticky="ew", pady=2)
-
-            self._btn_export = ttk.Button(detail, text="↓  Export",
-                                          command=self._action_export)
-            self._btn_export.grid(row=btn_row+2, column=0, columnspan=2,
-                                  sticky="ew", pady=2)
-
-            self._btn_assign = ttk.Button(detail, text="↔  Assign Audio…",
-                                          command=self._assign_audio)
-            self._btn_assign.grid(row=btn_row+3, column=0, columnspan=2,
-                                  sticky="ew", pady=2)
-
-            self._btn_clear = ttk.Button(detail, text="✕  Clear Assigned Audio",
-                                         command=self._clear_audio)
-            self._btn_clear.grid(row=btn_row+4, column=0, columnspan=2,
-                                 sticky="ew", pady=2)
-
-            self._btn_export_aliases = ttk.Button(detail, text="⬆  Export Aliases…",
-                                                   command=self._action_export_aliases)
-            self._btn_export_aliases.grid(row=btn_row+5, column=0, columnspan=2,
-                                          sticky="ew", pady=(10, 2))
-
-            for btn in (self._btn_play, self._btn_loop_editor, self._btn_export,
-                        self._btn_assign, self._btn_clear, self._btn_export_aliases):
-                btn.state(["disabled"])
+        def _fd_dir(self, **kw) -> str:
+            if self._last_dir and "initialdir" not in kw:
+                kw["initialdir"] = self._last_dir
+            result = filedialog.askdirectory(**kw)
+            if result:
+                self._last_dir = result
+            return result or ""
 
         # ── loading ───────────────────────────────────────────────────────────
         def _browse_archive(self):
-            path = filedialog.askopenfilename(
+            path = self._fd_open(
                 title="Open o2r archive",
                 filetypes=[("Starship archive", "*.o2r *.otr"), ("All", "*")])
             if path:
@@ -3788,13 +3834,13 @@ def cmd_gui(args):
 
             for font_path in sorted(font_inst, key=_font_short):
                 font_iid = f"font:{font_path}"
-                self._tree.insert("", "end", iid=font_iid, open=True,
+                self._tree.insert("", "end", iid=font_iid, open=False,
                     text=f"Bank  {_font_short(font_path)}")
                 self._node_map[font_iid] = {"leaf": False}
 
                 for inst_path in sorted(font_inst[font_path]):
                     inst_iid = f"inst:{font_path}:{inst_path}"
-                    self._tree.insert(font_iid, "end", iid=inst_iid, open=True,
+                    self._tree.insert(font_iid, "end", iid=inst_iid, open=False,
                         text=_path_tail(inst_path))
                     self._node_map[inst_iid] = {"leaf": False}
 
@@ -4059,7 +4105,7 @@ def cmd_gui(args):
                 return
             default_name = (os.path.splitext(os.path.basename(self._archive_path))[0]
                             + "_aliases.json")
-            out = filedialog.asksaveasfilename(
+            out = self._fd_save(
                 title="Export aliases",
                 defaultextension=".json",
                 initialfile=default_name,
@@ -4238,7 +4284,7 @@ def cmd_gui(args):
             slot_note = f" [{slot}]" if slot and slot != "normal" else ""
 
             if codec == 5:
-                out = filedialog.asksaveasfilename(
+                out = self._fd_save(
                     title="Export sample", defaultextension=".wav",
                     initialfile=os.path.basename(s["path"]) + ".wav",
                     filetypes=[("WAV", "*.wav"), ("All", "*")])
@@ -4248,7 +4294,7 @@ def cmd_gui(args):
                         f"Saved WAV to:\n{out}\n\nRate: {eff_rate} Hz{slot_note}")
 
             elif codec == 0:
-                choice = filedialog.asksaveasfilename(
+                choice = self._fd_save(
                     title="Export ADPCM sample",
                     initialfile=os.path.basename(s["path"]),
                     filetypes=[("Decoded WAV", "*.wav"),
@@ -4276,7 +4322,7 @@ def cmd_gui(args):
                         f"Raw ADPCM ({_fmt_size(s['size'])}) saved to:\n{choice}")
 
             else:
-                out = filedialog.asksaveasfilename(
+                out = self._fd_save(
                     title="Export raw sample data",
                     defaultextension=".bin",
                     initialfile=os.path.basename(s["path"]) + ".bin",
@@ -4290,14 +4336,13 @@ def cmd_gui(args):
 
         # ── batch assign / replace ────────────────────────────────────────────
         def _pick_outdir(self):
-            d = filedialog.askdirectory(parent=self,
-                                        title="Select output directory")
+            d = self._fd_dir(parent=self, title="Select output directory")
             if d:
                 self._outdir_var.set(d)
 
         def _assign_audio_to(self, s: dict):
             path  = s["path"]
-            audio = filedialog.askopenfilename(
+            audio = self._fd_open(
                 parent=self,
                 title=f"Assign audio to {os.path.basename(path)}",
                 filetypes=[("Audio files", "*.wav *.ogg *.mp3"),
@@ -4367,8 +4412,7 @@ def cmd_gui(args):
         def _action_scan_folder(self):
             if not self._samples:
                 return
-            folder = filedialog.askdirectory(parent=self,
-                                             title="Folder with audio files")
+            folder = self._fd_dir(parent=self, title="Folder with audio files")
             if not folder:
                 return
             audio_map: dict[str, str] = {}
@@ -4473,7 +4517,7 @@ def cmd_gui(args):
                     parent=self)
 
         def _action_open_project(self):
-            path = filedialog.askopenfilename(
+            path = self._fd_open(
                 title="Open Project",
                 filetypes=[(f"Sample editor project (*{BUNDLE_EXT}, *.json)",
                             f"*{BUNDLE_EXT} *.json"), ("All files", "*.*")],
@@ -4534,7 +4578,7 @@ def cmd_gui(args):
             if not self._archive_path:
                 return
             init = self._project_path or _project_default_path(self._archive_path)
-            path = filedialog.asksaveasfilename(
+            path = self._fd_save(
                 title="Save Project",
                 initialfile=os.path.splitext(os.path.basename(init))[0],
                 initialdir=os.path.dirname(init),
@@ -4926,7 +4970,7 @@ def cmd_gui(args):
                 def_ext = ".m64"
                 ftypes  = [("N64 sequence binary", "*.m64"), ("All", "*")]
                 init    = os.path.basename(entry["path"]) + ".m64"
-            out = filedialog.asksaveasfilename(
+            out = self._fd_save(
                 title="Export sequence",
                 defaultextension=def_ext,
                 initialfile=init,
@@ -5016,7 +5060,7 @@ def cmd_gui(args):
             if entry is None:
                 return
             path  = entry["path"]
-            audio = filedialog.askopenfilename(
+            audio = self._fd_open(
                 parent=self,
                 title=f"Assign audio to {entry['seq_name']}",
                 filetypes=[("Audio files", "*.wav *.ogg *.mp3"),
