@@ -310,48 +310,7 @@ a6_slippy_venoms_right_there:
   sampleBankId: 2
   symbol: a6_slippy_venoms_right_there
 
-gVoice_ID_15230:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF110
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15230
-
-gVoice_ID_15250:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF170
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15250
-
-gVoice_ID_15052_1:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xEF30
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15052_1
-
-gVoice_ID_15052_0:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xEF10
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15052_0
-
-gVoice_ID_15253_1:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF270
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15253_1
-
-gVoice_ID_15100:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xEFD0
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15100
-
+# AQUAS
 gVoice_ID_15010:
   type: NAUDIO:V1:SAMPLE
   offset: 0xEDA0
@@ -366,82 +325,12 @@ gVoice_ID_15030:
   sampleBankId: 2
   symbol: gVoice_ID_15030
 
-gVoice_ID_15253_0:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF250
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15253_0
-
-gVoice_ID_15200:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF090
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15200
-
-gVoice_ID_15110:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xEFF0
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15110
-
-gVoice_ID_15140:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF070
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15140
-
-gVoice_ID_15051:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xEEF0
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15051
-
 gVoice_ID_15040:
   type: NAUDIO:V1:SAMPLE
   offset: 0xEE70
   parent: 0xEBA0
   sampleBankId: 2
   symbol: gVoice_ID_15040
-
-gVoice_ID_15210:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF0B0
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15210
-
-gVoice_ID_15054:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xEF90
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15054
-
-gVoice_ID_15045_1:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xEEB0
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15045_1
-
-gVoice_ID_15120:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF010
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15120
-
-gVoice_ID_15050:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xEED0
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15050
 
 gVoice_ID_15045_0:
   type: NAUDIO:V1:SAMPLE
@@ -450,12 +339,40 @@ gVoice_ID_15045_0:
   sampleBankId: 2
   symbol: gVoice_ID_15045_0
 
-gVoice_ID_15251_2:
+gVoice_ID_15045_1:
   type: NAUDIO:V1:SAMPLE
-  offset: 0xF1D0
+  offset: 0xEEB0
   parent: 0xEBA0
   sampleBankId: 2
-  symbol: gVoice_ID_15251_2
+  symbol: gVoice_ID_15045_1
+
+gVoice_ID_15050:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xEED0
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15050
+
+gVoice_ID_15051:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xEEF0
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15051
+
+gVoice_ID_15052_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xEF10
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15052_0
+
+gVoice_ID_15052_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xEF30
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15052_1
 
 gVoice_ID_15053_0:
   type: NAUDIO:V1:SAMPLE
@@ -464,33 +381,19 @@ gVoice_ID_15053_0:
   sampleBankId: 2
   symbol: gVoice_ID_15053_0
 
-gVoice_ID_15251_1:
+gVoice_ID_15053_1:
   type: NAUDIO:V1:SAMPLE
-  offset: 0xF1B0
+  offset: 0xEF70
   parent: 0xEBA0
   sampleBankId: 2
-  symbol: gVoice_ID_15251_1
+  symbol: gVoice_ID_15053_1
 
-gVoice_ID_15220_1:
+gVoice_ID_15054:
   type: NAUDIO:V1:SAMPLE
-  offset: 0xF0F0
+  offset: 0xEF90
   parent: 0xEBA0
   sampleBankId: 2
-  symbol: gVoice_ID_15220_1
-
-gVoice_ID_15240_0:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF130
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15240_0
-
-gVoice_ID_15220_0:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF0D0
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15220_0
+  symbol: gVoice_ID_15054
 
 gVoice_ID_15060:
   type: NAUDIO:V1:SAMPLE
@@ -499,12 +402,89 @@ gVoice_ID_15060:
   sampleBankId: 2
   symbol: gVoice_ID_15060
 
-gVoice_ID_15053_1:
+gVoice_ID_15100:
   type: NAUDIO:V1:SAMPLE
-  offset: 0xEF70
+  offset: 0xEFD0
   parent: 0xEBA0
   sampleBankId: 2
-  symbol: gVoice_ID_15053_1
+  symbol: gVoice_ID_15100
+
+gVoice_ID_15110:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xEFF0
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15110
+
+gVoice_ID_15120:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF010
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15120
+
+gVoice_ID_15140:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF070
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15140
+
+gVoice_ID_15200:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF090
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15200
+
+gVoice_ID_15210:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF0B0
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15210
+
+gVoice_ID_15220_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF0D0
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15220_0
+
+gVoice_ID_15220_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF0F0
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15220_1
+
+gVoice_ID_15230:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF110
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15230
+
+gVoice_ID_15240_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF130
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15240_0
+
+gVoice_ID_15240_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF150
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15240_1
+
+gVoice_ID_15250:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF170
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15250
 
 gVoice_ID_15251_0:
   type: NAUDIO:V1:SAMPLE
@@ -513,12 +493,61 @@ gVoice_ID_15251_0:
   sampleBankId: 2
   symbol: gVoice_ID_15251_0
 
-gVoice_ID_15240_1:
+gVoice_ID_15251_1:
   type: NAUDIO:V1:SAMPLE
-  offset: 0xF150
+  offset: 0xF1B0
   parent: 0xEBA0
   sampleBankId: 2
-  symbol: gVoice_ID_15240_1
+  symbol: gVoice_ID_15251_1
+
+gVoice_ID_15252_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF1F0
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15252_0
+
+gVoice_ID_15252_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF210
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15252_1
+
+gVoice_ID_15251_2:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF1D0
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15251_2
+
+gVoice_ID_15252_2:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF230
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15252_2
+
+gVoice_ID_15253_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF250
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15253_0
+
+gVoice_ID_15253_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF270
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15253_1
+
+gVoice_ID_15254:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF290
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15254
 
 bo_andrew_youll_be_sorry_you_crossed_us:
   type: NAUDIO:V1:SAMPLE
@@ -2683,13 +2712,6 @@ gen_slippy_data_analysis_complete:
   sampleBankId: 2
   symbol: gen_slippy_data_analysis_complete
 
-gVoice_ID_15252_2:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF230
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15252_2
-
 gen_slippy_enemy_shield_analyzed:
   type: NAUDIO:V1:SAMPLE
   offset: 0x4CD0
@@ -2934,20 +2956,6 @@ gen_slippy_yeah_yeah:
   parent: 0x96A0
   sampleBankId: 2
   symbol: gen_slippy_yeah_yeah
-
-gVoice_ID_15252_0:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF1F0
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15252_0
-
-gVoice_ID_15252_1:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF210
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15252_1
 
 gen_slippy_youre_not_gettin_away_that_easy:
   type: NAUDIO:V1:SAMPLE
@@ -6875,13 +6883,6 @@ unused_peppy_dont_be_doing_anything_foolish:
   parent: 0x4520
   sampleBankId: 2
   symbol: unused_peppy_dont_be_doing_anything_foolish
-
-gVoice_ID_15254:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF290
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15254
 
 unused_peppy_for_a_u_turn_press_down_and_c_down:
   type: NAUDIO:V1:SAMPLE
