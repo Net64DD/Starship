@@ -500,6 +500,13 @@ gVoice_ID_15251_1:
   sampleBankId: 2
   symbol: gVoice_ID_15251_1
 
+gVoice_ID_15251_2:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0xF1D0
+  parent: 0xEBA0
+  sampleBankId: 2
+  symbol: gVoice_ID_15251_2
+
 gVoice_ID_15252_0:
   type: NAUDIO:V1:SAMPLE
   offset: 0xF1F0
@@ -513,13 +520,6 @@ gVoice_ID_15252_1:
   parent: 0xEBA0
   sampleBankId: 2
   symbol: gVoice_ID_15252_1
-
-gVoice_ID_15251_2:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0xF1D0
-  parent: 0xEBA0
-  sampleBankId: 2
-  symbol: gVoice_ID_15251_2
 
 gVoice_ID_15252_2:
   type: NAUDIO:V1:SAMPLE
