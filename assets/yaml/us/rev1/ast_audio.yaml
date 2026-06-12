@@ -30,287 +30,337 @@ audio_soundfont_table:
 audio_seq_font_table:
   { type: ARRAY, count: 283, array_type: u8, offset: 0xC48B0, symbol: gSeqFontTableInit }
 
-a6_caiman_caiman_here:
+# Area 6
+gVoice_ID_07005_0:
   type: NAUDIO:V1:SAMPLE
   offset: 0x98A0
   parent: 0x96A0
   sampleBankId: 2
-  symbol: a6_caiman_caiman_here
+  symbol: gVoice_ID_07005_0
 
-a6_caiman_do_you_copy:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9970
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_caiman_do_you_copy
-
-a6_caiman_emergency_maneuvers:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9990
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_caiman_emergency_maneuvers
-
-a6_caiman_no_problems:
+gVoice_ID_07005_1:
   type: NAUDIO:V1:SAMPLE
   offset: 0x9950
   parent: 0x96A0
   sampleBankId: 2
-  symbol: a6_caiman_no_problems
+  symbol: gVoice_ID_07005_1
 
-a6_caiman_not_yet_sir:
+gVoice_ID_07006_0:
   type: NAUDIO:V1:SAMPLE
-  offset: 0x9B30
+  offset: 0x9970
   parent: 0x96A0
   sampleBankId: 2
-  symbol: a6_caiman_not_yet_sir
+  symbol: gVoice_ID_07006_0
 
-a6_caiman_the_last_line_has_been_breached:
+gVoice_ID_07006_1:
   type: NAUDIO:V1:SAMPLE
-  offset: 0x9EB0
+  offset: 0x9990
   parent: 0x96A0
   sampleBankId: 2
-  symbol: a6_caiman_the_last_line_has_been_breached
+  symbol: gVoice_ID_07006_1
 
-a6_caiman_theyre_through_the_second_line:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9E10
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_caiman_theyre_through_the_second_line
-
-a6_caiman_theyve_broken_through_the_first_line:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9DF0
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_caiman_theyve_broken_through_the_first_line
-
-a6_commander_are_crazy:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9E50
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_commander_are_crazy
-
-a6_commander_dang:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9E70
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_commander_dang
-
-a6_commander_deploy_it_now:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9E90
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_commander_deploy_it_now
-
-a6_commander_did_we_get_em:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9B10
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_commander_did_we_get_em
-
-a6_commander_dont_let_em_through:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9DD0
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_commander_dont_let_em_through
-
-a6_commander_fire:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9D90
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_commander_fire
-
-a6_commander_these_guys:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9E30
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_commander_these_guys
-
-a6_falco_am_i_getting_slow:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9C30
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_falco_am_i_getting_slow
-
-a6_falco_and_let_me_shoot_you:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9A90
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_falco_and_let_me_shoot_you
-
-a6_falco_bogey_behind_me:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9C10
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_falco_bogey_behind_me
-
-a6_falco_crud:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9BD0
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_falco_crud
-
-a6_falco_game_over_pal:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x99F0
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_falco_game_over_pal
-
-a6_falco_hold_still:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9A70
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_falco_hold_still
-
-a6_falco_scream:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x14650
-  parent: 0x134A0
-  sampleBankId: 2
-  symbol: a6_falco_scream
-
-a6_falco_too_late:
+gVoice_ID_07011_0:
   type: NAUDIO:V1:SAMPLE
   offset: 0x99B0
   parent: 0x96A0
   sampleBankId: 2
-  symbol: a6_falco_too_late
+  symbol: gVoice_ID_07011_0
 
-a6_falco_we_were_so_close_to_venom:
+gVoice_ID_07011_1:
   type: NAUDIO:V1:SAMPLE
-  offset: 0x9BF0
+  offset: 0x99D0
   parent: 0x96A0
   sampleBankId: 2
-  symbol: a6_falco_we_were_so_close_to_venom
+  symbol: gVoice_ID_07011_1
 
-a6_fox_entering_venom_air_defence_zone:
+gVoice_ID_07011_2:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x99F0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07011_2
+
+gVoice_ID_07012:
   type: NAUDIO:V1:SAMPLE
   offset: 0x9A10
   parent: 0x96A0
   sampleBankId: 2
-  symbol: a6_fox_entering_venom_air_defence_zone
+  symbol: gVoice_ID_07012
 
-a6_fox_hold_on:
+gVoice_ID_07013:
   type: NAUDIO:V1:SAMPLE
-  offset: 0x9D50
+  offset: 0x9A30
   parent: 0x96A0
   sampleBankId: 2
-  symbol: a6_fox_hold_on
+  symbol: gVoice_ID_07013
 
-a6_fox_were_entering_venom_air_space:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9D70
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_fox_were_entering_venom_air_space
-
-a6_peppy_destroy_all_3_energy_balls:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9CB0
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_peppy_destroy_all_3_energy_balls
-
-a6_peppy_scream:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x14690
-  parent: 0x134A0
-  sampleBankId: 2
-  symbol: a6_peppy_scream
-
-a6_peppy_shoot_em_down_were_being_marked:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9AF0
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_peppy_shoot_em_down_were_being_marked
-
-a6_peppy_shoot_the_tentacles_to_open_the_core:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9C90
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_peppy_shoot_the_tentacles_to_open_the_core
-
-a6_peppy_the_shield_is_gone_shoot_the_core:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9D30
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_peppy_the_shield_is_gone_shoot_the_core
-
-a6_rob_great_fox_will_cover_you:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9B50
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_rob_great_fox_will_cover_you
-
-a6_slippy_different:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9BB0
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_slippy_different
-
-a6_slippy_enemy_ahead:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9B70
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_slippy_enemy_ahead
-
-a6_slippy_incoming_enemy_missile:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9AD0
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: a6_slippy_incoming_enemy_missile
-
-a6_slippy_scream:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x14670
-  parent: 0x134A0
-  sampleBankId: 2
-  symbol: a6_slippy_scream
-
-a6_slippy_space_mines_ahead:
+gVoice_ID_07014:
   type: NAUDIO:V1:SAMPLE
   offset: 0x9A50
   parent: 0x96A0
   sampleBankId: 2
-  symbol: a6_slippy_space_mines_ahead
+  symbol: gVoice_ID_07014
 
-a6_slippy_this_ones:
+gVoice_ID_07020_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9A70
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07020_0
+
+gVoice_ID_07020_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9A90
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07020_1
+
+gVoice_ID_07043:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9AB0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07043
+
+gVoice_ID_07050:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9AD0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07050
+
+gVoice_ID_07051:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9AF0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07051
+
+gVoice_ID_07052:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9B10
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07052
+
+gVoice_ID_07053:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9B30
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07053
+
+gVoice_ID_07054:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9B50
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07054
+
+gVoice_ID_07061_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9B70
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07061_0
+
+gVoice_ID_07061_1:
   type: NAUDIO:V1:SAMPLE
   offset: 0x9B90
   parent: 0x96A0
   sampleBankId: 2
-  symbol: a6_slippy_this_ones
+  symbol: gVoice_ID_07061_1
 
-a6_slippy_venoms_right_there:
+gVoice_ID_07061_2:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9BB0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07061_2
+
+gVoice_ID_07064_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9BD0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07064_0
+
+gVoice_ID_07064_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9BF0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07064_1
+
+gVoice_ID_07065_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9C10
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07065_0
+
+gVoice_ID_07065_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9C30
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07065_1
+
+gVoice_ID_07066:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9C50
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07066
+
+gVoice_ID_07070:
   type: NAUDIO:V1:SAMPLE
   offset: 0x9C70
   parent: 0x96A0
   sampleBankId: 2
-  symbol: a6_slippy_venoms_right_there
+  symbol: gVoice_ID_07070
 
-# AQUAS
+gVoice_ID_07083:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9C90
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07083
+
+gVoice_ID_07084:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9CB0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07084
+
+gVoice_ID_07085_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9CD0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07085_0
+
+gVoice_ID_07085_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9CF0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07085_1
+
+gVoice_ID_07086:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9D10
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07086
+  
+gVoice_ID_07087:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9D30
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07087
+
+gVoice_ID_07093_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9D50
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07093_0
+
+gVoice_ID_07093_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9D70
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07093_1
+
+gVoice_ID_07094_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9D90
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07094_0
+
+gVoice_ID_07094_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9DB0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07094_1
+
+gVoice_ID_07094_2:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9DD0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07094_2
+
+gVoice_ID_07095:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9DF0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07095
+
+gVoice_ID_07096:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9E10
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07096
+
+gVoice_ID_07097_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9E30
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07097_0
+
+gVoice_ID_07097_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9E50
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07097_1
+
+gVoice_ID_07098_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9E70
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07098_0
+
+gVoice_ID_07098_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9E90
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07098_1
+
+gVoice_ID_07099:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9EB0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07099
+
+gVoice_ID_07100_0:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9ED0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07100_0
+
+gVoice_ID_07100_1:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x9EF0
+  parent: 0x96A0
+  sampleBankId: 2
+  symbol: gVoice_ID_07100_1
+
+# Aquas
 gVoice_ID_15010:
   type: NAUDIO:V1:SAMPLE
   offset: 0xEDA0
@@ -549,6 +599,7 @@ gVoice_ID_15254:
   sampleBankId: 2
   symbol: gVoice_ID_15254
 
+# Bolse
 bo_andrew_youll_be_sorry_you_crossed_us:
   type: NAUDIO:V1:SAMPLE
   offset: 0xD850
@@ -1718,13 +1769,6 @@ gen_falco_ah:
   sampleBankId: 2
   symbol: gen_falco_ah
 
-gen_falco_all_right:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9ED0
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: gen_falco_all_right
-
 gen_falco_clean_up_this_mess:
   type: NAUDIO:V1:SAMPLE
   offset: 0x14330
@@ -1935,13 +1979,6 @@ gen_falco_is_that:
   sampleBankId: 2
   symbol: gen_falco_is_that
 
-gen_falco_its_working:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9CF0
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: gen_falco_its_working
-
 gen_falco_lets:
   type: NAUDIO:V1:SAMPLE
   offset: 0x14310
@@ -2047,13 +2084,6 @@ gen_falco_watch_out_fox:
   sampleBankId: 2
   symbol: gen_falco_watch_out_fox
 
-gen_falco_yeah:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9CD0
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: gen_falco_yeah
-
 gen_falco_you_are_so_lucky:
   type: NAUDIO:V1:SAMPLE
   offset: 0x13850
@@ -2110,19 +2140,33 @@ gen_fox_death_scream:
   sampleBankId: 2
   symbol: gen_fox_death_scream
 
+a6_falco_scream:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x14650
+  parent: 0x134A0
+  sampleBankId: 2
+  symbol: a6_falco_scream
+
+a6_peppy_scream:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x14690
+  parent: 0x134A0
+  sampleBankId: 2
+  symbol: a6_peppy_scream
+
+a6_slippy_scream:
+  type: NAUDIO:V1:SAMPLE
+  offset: 0x14670
+  parent: 0x134A0
+  sampleBankId: 2
+  symbol: a6_slippy_scream
+
 gen_fox_theres_one_more_to_go:
   type: NAUDIO:V1:SAMPLE
   offset: 0x12CF0
   parent: 0x12400
   sampleBankId: 2
   symbol: gen_fox_theres_one_more_to_go
-
-gen_fox_were_gonna_break_through_that_fleet:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9AB0
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: gen_fox_were_gonna_break_through_that_fleet
 
 gen_katt_beautiful_i_could_kiss_you_for_that:
   type: NAUDIO:V1:SAMPLE
@@ -2228,13 +2272,6 @@ gen_peppy_dont_mess_up_that_arwing:
   parent: 0x5A80
   sampleBankId: 2
   symbol: gen_peppy_dont_mess_up_that_arwing
-
-gen_peppy_everybody_stay_alert:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9A30
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: gen_peppy_everybody_stay_alert
 
 gen_peppy_everything_okay:
   type: NAUDIO:V1:SAMPLE
@@ -2431,13 +2468,6 @@ gen_peppy_theres_one_down:
   parent: 0xB100
   sampleBankId: 2
   symbol: gen_peppy_theres_one_down
-
-gen_peppy_theyre_on_me_im_gettin_careless:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9C50
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: gen_peppy_theyre_on_me_im_gettin_careless
 
 gen_peppy_to_barrel_roll_press_z_or_r_twice:
   type: NAUDIO:V1:SAMPLE
@@ -2949,13 +2979,6 @@ gen_slippy_whew_youre_alright:
   parent: 0x134A0
   sampleBankId: 2
   symbol: gen_slippy_whew_youre_alright
-
-gen_slippy_yeah_yeah:
-  type: NAUDIO:V1:SAMPLE
-  offset: 0x9D10
-  parent: 0x96A0
-  sampleBankId: 2
-  symbol: gen_slippy_yeah_yeah
 
 gen_slippy_youre_not_gettin_away_that_easy:
   type: NAUDIO:V1:SAMPLE
