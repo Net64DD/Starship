@@ -1025,18 +1025,30 @@ void AudioDebugWindow::DrawElement() {
                             s32 posInLoop = r.samplePos - (s32)r.loopStart;
                             float frac = (posInLoop >= 0) ? (float)posInLoop / (float)len : 0.f;
                             frac = frac < 0.f ? 0.f : frac > 1.f ? 1.f : frac;
-                            char ov[32]; snprintf(ov, sizeof(ov), "%d", r.samplePos);
-                            ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.2f,0.6f,1.f,1.f));
-                            ImGui::ProgressBar(frac, ImVec2(110.f, 0.f), ov);
-                            ImGui::PopStyleColor();
+                            ImVec2 barSize(110.f, ImGui::GetFrameHeight());
+                            ImVec2 pos = ImGui::GetCursorScreenPos();
+                            ImDrawList* dl = ImGui::GetWindowDrawList();
+                            dl->AddRectFilled(pos, ImVec2(pos.x + barSize.x, pos.y + barSize.y), IM_COL32(60,60,60,200));
+                            dl->AddRectFilled(pos, ImVec2(pos.x + barSize.x * frac, pos.y + barSize.y), IM_COL32(51,153,255,200));
+                            char txt[32]; snprintf(txt, sizeof(txt), "%d", r.samplePos);
+                            ImVec2 textSize = ImGui::CalcTextSize(txt);
+                            ImVec2 textPos = ImVec2(pos.x + barSize.x * 0.5f - textSize.x * 0.5f, pos.y + barSize.y * 0.5f - textSize.y * 0.5f);
+                            dl->AddText(textPos, IM_COL32(255,255,255,255), txt);
+                            ImGui::Dummy(barSize);
                         } else if (r.loopEnd > 0) {
                             // Non-looping sample (e.g. drums): progress over full length (orange).
                             float frac = (float)r.samplePos / (float)r.loopEnd;
                             frac = frac < 0.f ? 0.f : frac > 1.f ? 1.f : frac;
-                            char ov[32]; snprintf(ov, sizeof(ov), "%d", r.samplePos);
-                            ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.85f,0.5f,0.1f,1.f));
-                            ImGui::ProgressBar(frac, ImVec2(110.f, 0.f), ov);
-                            ImGui::PopStyleColor();
+                            ImVec2 barSize(110.f, ImGui::GetFrameHeight());
+                            ImVec2 pos = ImGui::GetCursorScreenPos();
+                            ImDrawList* dl = ImGui::GetWindowDrawList();
+                            dl->AddRectFilled(pos, ImVec2(pos.x + barSize.x, pos.y + barSize.y), IM_COL32(60,60,60,200));
+                            dl->AddRectFilled(pos, ImVec2(pos.x + barSize.x * frac, pos.y + barSize.y), IM_COL32(217,128,26,200));
+                            char txt[32]; snprintf(txt, sizeof(txt), "%d", r.samplePos);
+                            ImVec2 textSize = ImGui::CalcTextSize(txt);
+                            ImVec2 textPos = ImVec2(pos.x + barSize.x * 0.5f - textSize.x * 0.5f, pos.y + barSize.y * 0.5f - textSize.y * 0.5f);
+                            dl->AddText(textPos, IM_COL32(255,255,255,255), txt);
+                            ImGui::Dummy(barSize);
                         } else {
                             ImGui::Text("%d", r.samplePos);
                         }
