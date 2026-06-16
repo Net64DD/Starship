@@ -405,7 +405,7 @@ void AudioDebugWindow::DrawElement() {
     // == Sequence Players =====================================================
     if (sShow_SeqPlayers) {
         static float  sVolScale[SEQ_PLAYER_MAX]   = {1.f, 1.f, 1.f, 1.f};
-        static float    sTempoDelta[SEQ_PLAYER_MAX] = {1.f, 1.f, 1.f, 1.f};
+        static int    sTempoDelta[SEQ_PLAYER_MAX] = {0, 0, 0, 0};
         static int    sTranspose[SEQ_PLAYER_MAX]  = {0, 0, 0, 0};
 
         ImGui::SetNextWindowSize(ImVec2(480, 520), ImGuiCond_FirstUseEver);
@@ -466,14 +466,13 @@ void AudioDebugWindow::DrawElement() {
                 ImGui::SameLine(); HelpMarker("Multiplicative volume scale (1.0 = normal).");
 
                 ImGui::SetNextItemWidth(200.f);
-                if (ImGui::SliderFloat("Tempo +/-", &sTempoDelta[pi], 0.10f, 2.0f, "%.2f")) {
-                    // AUDIOCMD_SEQPLAYER_CHANGE_TEMPO(pi, sTempoDelta[pi]);
-                    gAudioDebugTempo[pi] = sTempoDelta[SEQ_PLAYER_BGM];
+                if (ImGui::SliderInt("Tempo +/-", &sTempoDelta[pi],-100, +100)) {
+                    AUDIOCMD_SEQPLAYER_CHANGE_TEMPO(pi, sTempoDelta[pi]);
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Reset##tempo")) {
-                    // AUDIOCMD_SEQPLAYER_CHANGE_TEMPO(pi, -sTempoDelta[pi]);
-                    gAudioDebugTempo[pi] = sTempoDelta[pi] = 1.0f;
+                    sTempoDelta[pi] = 0;
+                    AUDIOCMD_SEQPLAYER_CHANGE_TEMPO(pi, sTempoDelta[pi]);
                 }
                 ImGui::SameLine(); HelpMarker("Add a BPM delta on top of the sequence's native tempo.");
 

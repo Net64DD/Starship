@@ -395,6 +395,9 @@ void AudioThread_ProcessCmds(u32 msg) {
                     case AUDIOCMD_OP_SEQPLAYER_SET_TEMPO:
                         player->tempo = cmd->asInt * 48;
                         break;
+                    case AUDIOCMD_OP_SEQPLAYER_CHANGE_TEMPO:
+                        player->tempoChange = cmd->asInt * SEQTICKS_PER_BEAT;
+                        break;
                     case AUDIOCMD_OP_SEQPLAYER_SET_TRANSPOSITION:
                         player->transposition = cmd->asSbyte;
                         break;
