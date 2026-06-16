@@ -192,6 +192,7 @@ static void ModuleToggle(const char* label, bool* pVisible) {
 }
 
 // == Main draw ================================================================
+extern "C" float gAudioDebugTempo[SEQ_PLAYER_MAX] = { 1.0f, 1.0f, 1.0f, 1.0f, };
 
 void AudioDebugWindow::DrawElement() {
 
@@ -404,7 +405,7 @@ void AudioDebugWindow::DrawElement() {
     // == Sequence Players =====================================================
     if (sShow_SeqPlayers) {
         static float  sVolScale[SEQ_PLAYER_MAX]   = {1.f, 1.f, 1.f, 1.f};
-        static int    sTempoDelta[SEQ_PLAYER_MAX] = {0, 0, 0, 0};
+        static float    sTempoDelta[SEQ_PLAYER_MAX] = {1.f, 1.f, 1.f, 1.f};
         static int    sTranspose[SEQ_PLAYER_MAX]  = {0, 0, 0, 0};
 
         ImGui::SetNextWindowSize(ImVec2(480, 520), ImGuiCond_FirstUseEver);
@@ -465,13 +466,14 @@ void AudioDebugWindow::DrawElement() {
                 ImGui::SameLine(); HelpMarker("Multiplicative volume scale (1.0 = normal).");
 
                 ImGui::SetNextItemWidth(200.f);
-                if (ImGui::SliderInt("Tempo +/-", &sTempoDelta[pi], -300, 300)) {
-                    AUDIOCMD_SEQPLAYER_CHANGE_TEMPO(pi, sTempoDelta[pi]);
+                if (ImGui::SliderFloat("Tempo +/-", &sTempoDelta[pi], 0.10f, 1.0f)) {
+                    // AUDIOCMD_SEQPLAYER_CHANGE_TEMPO(pi, sTempoDelta[pi]);
+                    gAudioDebugTempo[pi] = sTempoDelta[SEQ_PLAYER_BGM];
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Reset##tempo")) {
-                    AUDIOCMD_SEQPLAYER_CHANGE_TEMPO(pi, -sTempoDelta[pi]);
-                    sTempoDelta[pi] = 0;
+                    // AUDIOCMD_SEQPLAYER_CHANGE_TEMPO(pi, -sTempoDelta[pi]);
+                    sTempoDelta[pi] = 1.0f;
                 }
                 ImGui::SameLine(); HelpMarker("Add a BPM delta on top of the sequence's native tempo.");
 
@@ -754,7 +756,7 @@ void AudioDebugWindow::DrawElement() {
 
         static std::vector<NoteRow> sCachedRows;
         static bool   sFreeze         = false;
-        static float  sRefreshHz      = 30.f;
+        static float  sRefreshHz      = 60.f;
         static double sLastRefreshTime = 0.0;
         static bool   sShowPlayer[SEQ_PLAYER_MAX] = { true, true, true, true };
         static bool  sActiveOnly    = false;
@@ -890,7 +892,7 @@ void AudioDebugWindow::DrawElement() {
 
             ImGui::SameLine();
             ImGui::SetNextItemWidth(120.f);
-            ImGui::SliderFloat("Hz", &sRefreshHz, 0.5f, 30.f, "%.1f Hz");
+            ImGui::SliderFloat("Hz", &sRefreshHz, 0.5f, 60.f, "%.1f Hz");
             if (ImGui::IsItemHovered())
                 ImGui::SetTooltip("How many times per second to refresh the table.");
 
