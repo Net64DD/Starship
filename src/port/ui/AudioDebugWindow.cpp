@@ -466,14 +466,14 @@ void AudioDebugWindow::DrawElement() {
                 ImGui::SameLine(); HelpMarker("Multiplicative volume scale (1.0 = normal).");
 
                 ImGui::SetNextItemWidth(200.f);
-                if (ImGui::SliderFloat("Tempo +/-", &sTempoDelta[pi], 0.10f, 1.0f)) {
+                if (ImGui::SliderFloat("Tempo +/-", &sTempoDelta[pi], 0.10f, 2.0f, "%.2f")) {
                     // AUDIOCMD_SEQPLAYER_CHANGE_TEMPO(pi, sTempoDelta[pi]);
                     gAudioDebugTempo[pi] = sTempoDelta[SEQ_PLAYER_BGM];
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Reset##tempo")) {
                     // AUDIOCMD_SEQPLAYER_CHANGE_TEMPO(pi, -sTempoDelta[pi]);
-                    sTempoDelta[pi] = 1.0f;
+                    gAudioDebugTempo[pi] = sTempoDelta[pi] = 1.0f;
                 }
                 ImGui::SameLine(); HelpMarker("Add a BPM delta on top of the sequence's native tempo.");
 
