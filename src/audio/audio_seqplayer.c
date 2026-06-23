@@ -1234,8 +1234,6 @@ end_loop:;
     }
 }
 
-extern float gAudioDebugTempo[SEQ_PLAYER_MAX];
-
 // @port: modified
 void AudioSeq_SequencePlayerProcessSequence(SequencePlayer* seqPlayer) {
     u8 temp_s2;
@@ -1274,14 +1272,7 @@ void AudioSeq_SequencePlayerProcessSequence(SequencePlayer* seqPlayer) {
         return;
     }
 
-    int currentSeqPlayer = 0;
-    for (int i = 0; i < SEQ_PLAYER_MAX; i++) {
-        if (seqPlayer == &gSeqPlayers[i]) {
-            currentSeqPlayer = i;
-        }
-    }
-
-    seqPlayer->tempoAcc += seqPlayer->tempo * gAudioDebugTempo[currentSeqPlayer];
+    seqPlayer->tempoAcc += seqPlayer->tempo;
     seqPlayer->tempoAcc = seqPlayer->tempoAcc + (s16) seqPlayer->tempoChange;
     if (seqPlayer->tempoAcc < gMaxTempo) {
         return;
