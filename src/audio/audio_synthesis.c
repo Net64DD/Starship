@@ -1064,20 +1064,19 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
                         goto skip;
 
                     case CODEC_S16:
-                        synthState->restart = 0;
                         aClearBuffer(aList++, DMEM_UNCOMPRESSED_NOTE,
                                      (numSamplesToLoadAdj + SAMPLES_PER_FRAME) * SAMPLE_SIZE);
 
                         flags = A_CONTINUE;
                         skipBytes = 0;
-                        size_t bytesToRead;
                         numSamplesProcessed += numSamplesToLoadAdj;
                         dmemUncompressedAddrOffset1 = numSamplesToLoadAdj;
-
+                        
                         {
                             // 2S2H [Port] [Custom audio] Handle decoding OPUS data
                             // Guard against underflow: decoder may not be ready yet (size==0)
                             // or loop end exceeds actual buffer length.
+                            size_t bytesToRead;
                             size_t bytePos = (size_t)synthState->samplePosInt * 2;
                             if (sampleAddr == 0 || bookSample->size == 0 || bytePos >= bookSample->size) {
                                 // Decoder not ready (sampleAddr/size not yet set) or past end.
@@ -1091,14 +1090,14 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
                                 // samples from loopInfo->start to fill the rest of the DMEM
                                 // buffer.  Without stitching the tail is silence and the loop
                                 // sounds like it ends before restarting.
-                                // Exact byte count — no 16-byte rounding so every sample up to
+                                // Exact byte count, no 16-byte rounding so every sample up to
                                 // loopInfo->end is loaded and the splice happens at the precise
                                 // loop boundary.  aLoadBufferExact is used instead of aLoadBuffer
                                 // because the standard variant internally rounds down to 16 bytes.
                                 size_t bytesBeforeLoop = ((size_t)endPos - (size_t)synthState->samplePosInt) * 2;
                                 s16LoopStartAdvance = (size_t)numSamplesToLoadAdj - (bytesBeforeLoop >> 1);
                                 if (bytesBeforeLoop > 0) {
-                                    aLoadBufferExact(aList++, OS_K0_TO_PHYSICAL(sampleAddr + bytePos),
+                                    aLoadBuffer(aList++, OS_K0_TO_PHYSICAL(sampleAddr + bytePos),
                                                      DMEM_UNCOMPRESSED_NOTE, bytesBeforeLoop);
                                 }
                                 // Fill the tail from the loop-start position.
@@ -1109,7 +1108,7 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
                                     size_t tailAvail  = bookSample->size - loopStartBytePos;
                                     bytesToRead = tailNeeded < tailAvail ? tailNeeded : tailAvail;
                                     if (bytesToRead > 0) {
-                                        aLoadBufferExact(aList++,
+                                        aLoadBuffer(aList++,
                                                          OS_K0_TO_PHYSICAL(sampleAddr + loopStartBytePos),
                                                          DMEM_UNCOMPRESSED_NOTE + bytesBeforeLoop,
                                                          bytesToRead);
@@ -1226,9 +1225,9 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
                         break;
                 }
 
-            skip:
-
                 flags = A_CONTINUE;
+
+            skip:
 
                 if (sampleFinished) {
                     aClearBuffer(aList++, DMEM_UNCOMPRESSED_NOTE + dmemUncompressedAddrOffset1,
@@ -1237,9 +1236,7 @@ Acmd* AudioSynth_ProcessNote(s32 noteIndex, NoteSubEu* noteSub, NoteSynthesisSta
                     note->noteSubEu.bitField0.finished = true;
                     AudioSynth_DisableSampleStates(updateIndex, noteIndex);
                     break;
-                }
-
-                if (loopToPoint) {
+                } else if (loopToPoint) {
                     synthState->restart = true;
                     synthState->samplePosInt = loopInfo->start + s16LoopStartAdvance;
                 } else {
