@@ -47,7 +47,7 @@ u8 Load_SceneFiles(Scene* scene) {
     }
 
     if (hasSceneChanged) {
-        printf("Scene Changed!\n");
+        // printf("Scene Changed!\n");
     }
 
     return hasSceneChanged;

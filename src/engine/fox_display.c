@@ -1915,7 +1915,7 @@ void Display_Update(void) {
     if (bigJump) {
         // @port Skip interpolation
         FrameInterpolation_ShouldInterpolateFrame(false);
-        printf("CAMERA 1 SKIPED: %d\n", camSkipTimes++);
+        // printf("CAMERA 1 SKIPED: %d\n", camSkipTimes++);
         gCamera1Skipped = true;
     } else {
         FrameInterpolation_RecordOpenChild("GamePlayCam", camPlayer->num);
